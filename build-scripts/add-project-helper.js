@@ -37,8 +37,11 @@ const exists = (checkPath) =>
 
 const copyDirectory = async (dirPath, targetPrefix) => {
   try {
-    const files = await fs.promises.readdir(dirPath);
+    const targetDir = path.resolve(PACKAGES_DIR, targetPrefix);
+    if (!(await exists(targetDir)))
+      await fs.promises.mkdir(path.resolve(PACKAGES_DIR, targetPrefix));
 
+    const files = await fs.promises.readdir(dirPath);
     for (let i = 0; i < files.length; i++) {
       const fPath = path.resolve(dirPath, files[i]);
       const stats = await fs.promises.stat(fPath);
@@ -59,9 +62,9 @@ const copyDirectory = async (dirPath, targetPrefix) => {
 const main = async () => {
   console.log("Creating a new @dungeon-crawler/* package.\n");
 
-  const packageName = await awaitQuestion("Package name:\t");
-  const packageDesc = await awaitQuestion("Description:\t");
-  const packageAuthor = await awaitQuestion("Author:\t");
+  const packageName = await awaitQuestion("Package name: ");
+  const packageDesc = await awaitQuestion("Description: ");
+  const packageAuthor = await awaitQuestion("Author: ");
 
   const safeName = slugify(packageName);
 
@@ -77,28 +80,27 @@ const main = async () => {
 
   try {
     console.log("\nUpdating package.json with provided info...");
-    const packagePath = path.resolve(TEMPLATE_DIR, safeName, "package.json");
+    const packagePath = path.resolve(PACKAGES_DIR, safeName, "package.json");
     const packageJson = await fs.promises.readFile(packagePath, "utf-8");
     const packageContents = packageJson
       .toString()
-      .replace("%name%", safeName)
+      .replace("%name%", `@dungeon-crawler/${safeName}`)
       .replace("%description%", packageDesc)
       .replace("%author%", packageAuthor);
     await fs.promises.writeFile(packagePath, packageContents);
-    console.log("Finished updating package.json.");
+    console.log("Finished updating package.json.\n");
   } catch (e) {
     console.error(
-      "There was an error trying to update the package.json file. Try updating it manually :("
+      "There was an error trying to update the package.json file. Try updating it manually :(",
+      e
     );
   }
 
-  console.log(`
-    You're good to go!
-    
-    For TypeScript to build properly, please add the following to
-    the \`references\` prop of the root \`tsconfig.json\`:
-    
-    { "path": "packages/${safeName}" }`);
+  console.log("You're good to go!\n");
+  console.log("For TypeScript to build properly, please add the following to");
+  console.log("the `references` prop of the root `tsconfig.json`:\n");
+  console.log(`   { "path": "packages/${safeName}" }`);
+  console.log("\nHappy coding :)\n");
   process.exit(0);
 };
 
