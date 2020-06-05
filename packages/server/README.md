@@ -1,7 +1,5 @@
 # `@dungeon-crawler/server`
 
-===
-
 Server module for the js dungeon crawler project.
 
 ## Getting started

@@ -1,7 +1,5 @@
 # `@dungeon-crawler/%name%`
 
-===
-
 %description%
 
 ## Getting started

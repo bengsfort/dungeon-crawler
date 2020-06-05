@@ -1,7 +1,5 @@
 # `@dungeon-crawler/client`
 
-===
-
 The web client for the dungeon crawler game.
 
 ## Getting started
