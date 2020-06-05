@@ -59,6 +59,25 @@ const copyDirectory = async (dirPath, targetPrefix) => {
   }
 };
 
+const replaceFileKeywords = async (file, pName, pDescription, pAuthor) => {
+  try {
+    const fileContents = await fs.promises.readFile(file, "utf-8");
+    const updatedContents = fileContents
+      .toString()
+      .replace("%name%", pName)
+      .replace("%description%", pDescription)
+      .replace("%author%", pAuthor);
+    await fs.promises.writeFile(file, updatedContents);
+  } catch (e) {
+    console.error(
+      "There was an error trying to update the template:\n" +
+        file +
+        "\nTry updating it manually :(",
+      e
+    );
+  }
+};
+
 const main = async () => {
   console.log("Creating a new @dungeon-crawler/* package.\n");
 
@@ -78,23 +97,25 @@ const main = async () => {
   console.log("\nCreating new package...");
   await copyDirectory(TEMPLATE_DIR, safeName);
 
-  try {
-    console.log("\nUpdating package.json with provided info...");
-    const packagePath = path.resolve(PACKAGES_DIR, safeName, "package.json");
-    const packageJson = await fs.promises.readFile(packagePath, "utf-8");
-    const packageContents = packageJson
-      .toString()
-      .replace("%name%", `@dungeon-crawler/${safeName}`)
-      .replace("%description%", packageDesc)
-      .replace("%author%", packageAuthor);
-    await fs.promises.writeFile(packagePath, packageContents);
-    console.log("Finished updating package.json.\n");
-  } catch (e) {
-    console.error(
-      "There was an error trying to update the package.json file. Try updating it manually :(",
-      e
-    );
-  }
+  console.log("\nUpdating package.json with provided info...");
+  const packagePath = path.resolve(PACKAGES_DIR, safeName, "package.json");
+  await replaceFileKeywords(
+    packagePath,
+    packageName,
+    packageDesc,
+    packageAuthor
+  );
+  console.log("Finished updating package.json.");
+
+  console.log("\nUpdating README.md with provided info...");
+  const readmePath = path.resolve(PACKAGES_DIR, safeName, "README.md");
+  await replaceFileKeywords(
+    readmePath,
+    packageName,
+    packageDesc,
+    packageAuthor
+  );
+  console.log("Finished updating README.md.\n");
 
   console.log("You're good to go!\n");
   console.log("For TypeScript to build properly, please add the following to");

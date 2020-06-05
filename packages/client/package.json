@@ -1,9 +1,9 @@
 {
-  "name": "@dungeon-crawler/%name%",
+  "name": "@dungeon-crawler/client",
   "version": "0.1.0",
-  "description": "%description%",
+  "description": "The web client for the dungeon crawler game.",
   "main": "dist/index.js",
-  "author": "%author%",
+  "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",
   "private": true,

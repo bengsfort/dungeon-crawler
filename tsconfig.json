@@ -1,4 +1,8 @@
 {
   "files": [],
-  "references": [{ "path": "packages/renderer" }, { "path": "packages/server" }]
+  "references": [
+    { "path": "packages/renderer" },
+    { "path": "packages/server" },
+    { "path": "packages/client" }
+  ]
 }
