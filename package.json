@@ -1,0 +1,31 @@
+{
+  "name": "dungeon-crawler",
+  "version": "0.0.1",
+  "description": "A dungeon crawler made with js.",
+  "author": "Matt Bengston <bengsfort@gmail.com>",
+  "repository": "git@github.com:bengsfort/dungeon-crawler.git",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "package:create": "node ./build-scripts/add-project-helper.js",
+    "build": "yarn workspaces run build",
+    "build:packages": "tsc -b",
+    "clean": "yarn workspaces run clean",
+    "lint": "eslint . --ext .js,.ts --max-warnings=0",
+    "lint:fix": "yarn lint --fix",
+    "format": "prettier --write \"**/*.{js,json,ts,tsx}\"",
+    "format:check": "prettier --list-different \"**/*.{js,json,ts,tsx}\"",
+    "pre-commit": "yarn lint-staged"
+  },
+  "devDependencies": {
+    "@dungeon-crawler/eslint-plugin": "*",
+    "eslint": "^7.1.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.9",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.5"
+  }
+}

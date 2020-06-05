@@ -1,0 +1,19 @@
+{
+  "name": "@dungeon-crawler/renderer",
+  "version": "0.1.0",
+  "description": "The renderer module for this dungeon crawler.",
+  "main": "dist/index.js",
+  "author": "Matt Bengston <bengsfort@gmail.com>",
+  "repository": "git@github.com:bengsfort/dungeon-crawler.git",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.5"
+  },
+  "scripts": {
+    "start": "tsc -w --preserveWatchOutput",
+    "build": "tsc -b",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+  }
+}

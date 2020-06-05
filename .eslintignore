@@ -1,0 +1,8 @@
+# folders
+node_modules
+coverage
+dist
+dist-ignore
+.eslintrc.js
+eslint-plugin
+build-scripts

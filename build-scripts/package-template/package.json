@@ -1,0 +1,19 @@
+{
+  "name": "%name%",
+  "version": "0.1.0",
+  "description": "%description%",
+  "main": "dist/index.js",
+  "author": "%author%",
+  "repository": "git@github.com:bengsfort/dungeon-crawler.git",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.5"
+  },
+  "scripts": {
+    "start": "tsc -w --preserveWatchOutput",
+    "build": "tsc -b",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+  }
+}
