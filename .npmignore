@@ -1,0 +1,9 @@
+.vscode
+deploy/*
+docs/*
+*.sh
+*.tgz
+*.spec.ts
+*.tsbuildinfo
+*.log
+tsconfig.json

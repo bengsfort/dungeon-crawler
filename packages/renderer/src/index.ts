@@ -1,1 +1,2 @@
-console.log("Let's get crackin' my guys");
+export * from "./sprites";
+export * from "./canvas";

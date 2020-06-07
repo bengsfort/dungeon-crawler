@@ -1,7 +1,7 @@
 {
-  "name": "@dungeon-crawler/renderer",
+  "name": "@dungeon-crawler/runtime",
   "version": "0.1.0",
-  "description": "The renderer module for this dungeon crawler.",
+  "description": "Actual runtime for the dungeon crawler game.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Matt Bengston <bengsfort@gmail.com>",

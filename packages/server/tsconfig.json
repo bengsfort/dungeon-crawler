@@ -3,6 +3,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "."
-  }
+    "baseUrl": ".",
+    "paths": {
+      "@dungeon-crawler/renderer": ["../renderer"]
+    }
+  },
+  "references": [{ "path": "../renderer" }]
 }

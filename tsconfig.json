@@ -3,6 +3,7 @@
   "references": [
     { "path": "packages/renderer" },
     { "path": "packages/server" },
+    { "path": "packages/runtime" },
     { "path": "packages/client" }
   ]
 }

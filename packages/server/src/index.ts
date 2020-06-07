@@ -1,14 +1,13 @@
-// Ready for code
+import express from "express";
+import { join } from "path";
 
-/*
-If this package needs to be included in the main project, you need to add it:
-package.json
+const app = express();
 
-"devDependencies": {
-    "package-name": "*",
-}
+// Use dynamic port eventually
+const port = 3000;
 
-You may also need to add it to the base tsconfig.json in the project root:
+app.use("/", express.static(join(__dirname, "public")));
 
-"references": [{ "path": "packages/renderer" }]
-*/
+app.listen(port, () => {
+  console.log(`Server up and running on port ${port}`);
+});
