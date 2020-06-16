@@ -6,3 +6,5 @@ dist-ignore
 .eslintrc.js
 eslint-plugin
 build-scripts
+rollup.config.js
+*.asset.ts

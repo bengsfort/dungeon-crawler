@@ -27,5 +27,6 @@ module.exports = {
   rules: {
     // TYPESCRIPT: https://www.npmjs.com/package/@typescript-eslint/eslint-plugin
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
   },
 };

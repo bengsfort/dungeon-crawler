@@ -24,6 +24,7 @@ function resizeCanvas(
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   ctx.fillRect(0, 0, width, height);
+  console.log("Does this actually work?!");
 }
 
 /**

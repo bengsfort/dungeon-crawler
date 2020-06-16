@@ -1,8 +1,9 @@
 {
-  "name": "@dungeon-crawler/client",
+  "name": "@dungeon-crawler/module-tests",
   "version": "0.1.0",
-  "description": "The web client for the dungeon crawler game.",
+  "description": "Test clients/cases for dungeon crawler packages.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",
@@ -18,10 +19,12 @@
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.9.5"
   },
+  "dependencies": {
+    "@dungeon-crawler/renderer": "^0.1.0"
+  },
   "scripts": {
     "start": "tsc -w --preserveWatchOutput",
     "build": "rollup -c",
-    "prebuild": "yarn clean",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   }
 }
