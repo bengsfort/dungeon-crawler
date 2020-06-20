@@ -10,8 +10,6 @@ const [_nodePath, _file, ...args] = process.argv;
 const cwd = process.cwd();
 const configPath = path.resolve(cwd, "./rollup.config.js");
 
-let config;
-
 const getArgValue = (name, defaultVal) => {
   const index = args.indexOf(name);
   if (index < 0) return defaultVal;
@@ -28,35 +26,21 @@ if (cluster.isMaster) {
     exec: "../../build-scripts/dev-server.js",
   });
   cluster.fork();
-  watchChanges();
+  watchRollup();
 }
 
-// Rebuilding
-async function watchChanges() {
-  fs.promises.opendir();
-  const dir = await fs.promises.opendir(path.resolve(cwd, "./src"));
-  walkRecursive(dir);
-}
-
-async function walkRecursive(dir) {
-  for await (const dirent of dir) {
-    if (dirent.isFile()) {
-      watchFile(dirent.name, dir.path);
-    } else {
-      const recDir = await fs.promises.opendir(`${dir.path}/${dirent.name}`);
-      walkRecursive(recDir);
-    }
-  }
-}
-
-function watchFile(name, path) {
-  fs.watch(`${path}/${name}`, async (eventType, fileName) => {
-    if (eventType === "change") {
-      const { warnings, options } = await loadConfigFile(configPath);
-      console.log(`Rollup detected ${warnings.count} warnings.`);
-      config.warnings.flush();
-      const bundle = await rollup.rollup(options);
-      await Promise.all(options.output.map(bundle.write));
+async function watchRollup() {
+  const { warnings, options } = await loadConfigFile(configPath);
+  console.log(`Rollup detected ${warnings.count} warnings.`);
+  warnings.flush();
+  const watch = rollup.watch(options);
+  watch.on("restart", () => console.log("Rollup watcher restarted"));
+  watch.on("change", (id) =>
+    console.log("ROllup watcher detected a change:", id)
+  );
+  watch.on("event", async (event) => {
+    if (event.code === "END") {
+      console.log("Rollup bundle built.");
     }
   });
 }

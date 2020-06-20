@@ -23,7 +23,7 @@
     "@dungeon-crawler/renderer": "^0.1.0"
   },
   "scripts": {
-    "start": "tsc -w --preserveWatchOutput",
+    "start": "node ../../build-scripts/watch-client.js --port 3000",
     "build": "rollup -c",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   }
