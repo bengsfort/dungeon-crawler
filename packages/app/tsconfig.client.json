@@ -1,9 +1,10 @@
 {
+  "include": ["./src/client/*"],
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "src/client",
     "outDir": "dist",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "@dungeon-crawler/renderer": ["../renderer"]
     }

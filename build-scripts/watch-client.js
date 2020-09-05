@@ -1,8 +1,6 @@
 const cluster = require("cluster");
-const fs = require("fs");
-const path = require("path");
-
 const loadConfigFile = require("rollup/dist/loadConfigFile");
+const path = require("path");
 const rollup = require("rollup");
 
 const [_nodePath, _file, ...args] = process.argv;
@@ -36,7 +34,7 @@ async function watchRollup() {
   const watch = rollup.watch(options);
   watch.on("restart", () => console.log("Rollup watcher restarted"));
   watch.on("change", (id) =>
-    console.log("ROllup watcher detected a change:", id)
+    console.log("Rollup watcher detected a change:", id)
   );
   watch.on("event", async (event) => {
     if (event.code === "END") {

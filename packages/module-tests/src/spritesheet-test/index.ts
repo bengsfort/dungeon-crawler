@@ -8,7 +8,6 @@ const SCALE = 2;
 const GRID_SIZE = 16 * SCALE;
 
 async function draw() {
-  console.log("Boiiiii this actually worked?!");
   const canvas = createCanvas();
   root?.append(canvas);
 

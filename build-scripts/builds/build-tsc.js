@@ -1,18 +1,12 @@
 // This was going to be used for the dev server when we `cluster.fork` but
 // I don't know if we need this anymore.
 
-const ts = require("typescript");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
+const ts = require("typescript");
 
-const [_nodePath, _file, ...args] = process.argv;
-
-function getArgValue(name, defaultVal) {
-  const index = args.indexOf(name);
-  if (index < 0) return defaultVal;
-  return args[index + 1];
-}
+const utils = require("../script-utils");
 
 function reportDiagnostics(diagnostics) {
   diagnostics.forEach((diagnostic) => {
@@ -81,6 +75,8 @@ function watch(configFileName) {
   // Extract configuration from config file
   const config = readConfigFile(configFileName);
 
+  console.log("read config:", config);
+
   // Watch
   const host = ts.createWatchCompilerHost(
     config.fileNames,
@@ -88,14 +84,41 @@ function watch(configFileName) {
     ts.sys,
     ts.createSemanticDiagnosticsBuilderProgram
   );
+
+  const originalWatchStatusChange = host.onWatchStatusChange;
+  host.onWatchStatusChange = (...args) => {
+    const [diagnostics, newLine, opts, errorCount] = args;
+    console.log(
+      "\ndiagnostics:",
+      diagnostics,
+      "\nnewLine:",
+      newLine,
+      "\nerrorCount:",
+      errorCount
+    );
+    if (originalWatchStatusChange) {
+      console.log("Running originalWatchStatusChange");
+      originalWatchStatusChange(...args);
+    }
+  };
+
+  const origAfterProgramCreate = host.afterProgramCreate;
+  host.afterProgramCreate = (prog) => {
+    console.log("afterProgramCreate", prog);
+    if (origAfterProgramCreate) origAfterProgramCreate(prog);
+  };
+
   ts.createWatchProgram(host);
+  console.log("Watching");
 }
 
-const buildType = getArgValue("--type", "compile");
-const fileName = getArgValue("--config", "tsconfig.json");
+const config = path.resolve(
+  utils.getArgValue(process.argv, "--config", "./tsconfig.server.json")
+);
+const watchMode = utils.getArgExists(process.argv, "--watch");
 
-if (buildType === "watch") {
-  watch(fileName);
-} else if (buildType === "compile") {
-  compile(fileName);
+if (watchMode) {
+  watch(config);
+} else {
+  compile(config);
 }

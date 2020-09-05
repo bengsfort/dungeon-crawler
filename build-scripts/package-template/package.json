@@ -4,6 +4,7 @@
   "description": "%description%",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "author": "%author%",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",

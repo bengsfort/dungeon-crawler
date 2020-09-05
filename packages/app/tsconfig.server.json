@@ -1,0 +1,13 @@
+{
+  "include": ["./src/server/*"],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "rootDir": "src/server",
+    "outDir": "dist/server",
+    "baseUrl": "./src",
+    "tsBuildInfoFile": "./tsconfig.server.tsbuildinfo",
+    "paths": {}
+  },
+  "references": []
+}

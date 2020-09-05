@@ -1,6 +1,6 @@
-const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
+const readline = require("readline");
 
 const TEMPLATE_DIR = path.resolve(__dirname, "package-template");
 const PACKAGES_DIR = path.resolve(__dirname, "../packages");

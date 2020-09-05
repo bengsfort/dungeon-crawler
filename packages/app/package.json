@@ -1,0 +1,42 @@
+{
+  "name": "@dungeon-crawler/app",
+  "version": "0.1.0",
+  "description": "Implementation of the dungeon crawler app.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Matt Bengston <bengsfort@gmail.com>",
+  "repository": "git@github.com:bengsfort/dungeon-crawler.git",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@rollup/plugin-image": "^2.0.5",
+    "@types/express": "^4.17.6",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.16.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy-assets": "^2.0.1",
+    "rollup-plugin-css-porter": "^1.0.2",
+    "rollup-plugin-generate-html-template": "^1.6.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "typescript": "^3.9.5"
+  },
+  "scripts": {
+    "dev:client-build": "rollup -c -w",
+    "dev:server-build": "tsc -w --preserveWatchOutput -p tsconfig.server.json",
+    "dev:server": "node ../../build-scripts/nodemon-lite.js --entry ./dist/server/index.js --ext .js,.json",
+    "dev": "run-p -cln dev:client-build dev:server-build dev:server",
+    "watch": "yarn dev",
+    "start": "yarn build && node ./dist/server/index.js",
+    "build": "yarn build:client && yarn build:server",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:client": "rollup -c",
+    "prebuild": "yarn clean",
+    "clean": "rimraf {dist,tsconfig.server.tsbuildinfo}"
+  },
+  "dependencies": {
+    "@dungeon-crawler/renderer": "^0.1.0",
+    "express": "^4.17.1"
+  }
+}

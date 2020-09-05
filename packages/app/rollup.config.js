@@ -1,24 +1,28 @@
 import commonJS from "rollup-plugin-commonjs";
+// import css from "rollup-plugin-css-porter";
 import html from "rollup-plugin-generate-html-template";
 import image from "@rollup/plugin-image";
 import node from "rollup-plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
 
 export default {
-  input: "src/index.ts",
+  input: "src/client/index.ts",
   output: {
-    file: "dist/bundle.js",
+    file: "dist/client/bundle.js",
     format: "iife",
-    name: "WowBasic",
+    name: "GameClient",
   },
   plugins: [
     node(),
     commonJS(),
     image(),
-    typescript(),
+    // css(),
+    typescript({
+      tsconfig: "./tsconfig.client.json",
+    }),
     html({
-      template: "./src/index.html",
-      target: "index.html",
+      template: "./src/client/index.html",
+      target: "./dist/client/index.html",
     }),
   ],
 };

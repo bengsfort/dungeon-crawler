@@ -2,7 +2,7 @@
   "*.{js,json,ts}": [
     "prettier --write"
   ],
-  "*.{js,ts}": [
+  "*.{ts}": [
       "eslint --max-warnings=0 --fix"
   ]
 }
