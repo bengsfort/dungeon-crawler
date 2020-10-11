@@ -1,13 +1,19 @@
 {
-  "include": ["./src/client/*"],
+  "include": ["./src/client/**/*"],
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src/client",
     "outDir": "dist",
     "baseUrl": "./src",
     "paths": {
-      "@dungeon-crawler/renderer": ["../renderer"]
+      "@dungeon-crawler/core": ["../core"],
+      "@dungeon-crawler/renderer": ["../renderer"],
+      "@dungeon-crawler/runtime": ["../runtime"]
     }
   },
-  "references": [{ "path": "../renderer" }]
+  "references": [
+    { "path": "../core" },
+    { "path": "../renderer" },
+    { "path": "../runtime" }
+  ]
 }

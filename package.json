@@ -8,6 +8,7 @@
   "private": true,
   "workspaces": [
     "packages/eslint-plugin",
+    "packages/core",
     "packages/renderer",
     "packages/runtime",
     "packages/module-tests",

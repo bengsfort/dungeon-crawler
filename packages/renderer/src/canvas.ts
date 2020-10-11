@@ -11,11 +11,11 @@ import { Sprite } from "./sprites";
  * @param {number} width
  * @param {number} height
  */
-function resizeCanvas(
+export function resizeCanvas(
   canvas: HTMLCanvasElement,
   width: number,
   height: number
-) {
+): void {
   const { devicePixelRatio } = window;
   canvas.width = width * devicePixelRatio;
   canvas.height = height * devicePixelRatio;
@@ -55,7 +55,7 @@ export function createCanvas(): HTMLCanvasElement {
   return canvas;
 }
 
-interface EditableCanvas {
+export interface EditableCanvas {
   getContext(): CanvasRenderingContext2D;
   drawSprite(
     sprite: Sprite,

@@ -13,8 +13,13 @@
     "typescript": "^3.9.5"
   },
   "scripts": {
-    "start": "tsc -w --preserveWatchOutput",
+    "start": "tsc -w -d --preserveWatchOutput",
     "build": "tsc -b",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+  },
+  "dependencies": {
+    "@dungeon-crawler/core": "^0.1.0",
+    "@types/stats.js": "^0.17.0",
+    "stats.js": "^0.17.0"
   }
 }

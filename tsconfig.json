@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [
+    { "path": "packages/core" },
     { "path": "packages/renderer" },
     { "path": "packages/runtime" },
     { "path": "packages/app/tsconfig.client.json" },

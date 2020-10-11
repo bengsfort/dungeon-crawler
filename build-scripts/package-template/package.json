@@ -14,7 +14,7 @@
     "typescript": "^3.9.5"
   },
   "scripts": {
-    "start": "tsc -w --preserveWatchOutput",
+    "start": "tsc -w -d --preserveWatchOutput",
     "build": "tsc -b",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   }

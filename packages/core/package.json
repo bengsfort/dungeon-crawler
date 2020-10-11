@@ -1,9 +1,10 @@
 {
-  "name": "@dungeon-crawler/renderer",
+  "name": "@dungeon-crawler/core",
   "version": "0.1.0",
-  "description": "The renderer module for this dungeon crawler.",
+  "description": "Core utilities for the dungeon crawler.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",
@@ -11,9 +12,6 @@
   "devDependencies": {
     "rimraf": "^3.0.2",
     "typescript": "^3.9.5"
-  },
-  "dependencies": {
-    "@dungeon-crawler/core": "^0.1.0"
   },
   "scripts": {
     "start": "tsc -w -d --preserveWatchOutput",

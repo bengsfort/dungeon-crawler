@@ -1,0 +1,49 @@
+[
+  {
+    "color": "#ff55007f",
+    "name": "npc_spawn",
+    "properties": [
+      {
+        "name": "entity",
+        "type": "string",
+        "value": ""
+      },
+      {
+        "name": "height",
+        "type": "float",
+        "value": 16
+      },
+      {
+        "name": "width",
+        "type": "float",
+        "value": 16
+      }
+    ]
+  },
+  {
+    "color": "#ffffaa00",
+    "name": "static_entity_spawn",
+    "properties": [
+      {
+        "name": "destructible",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "entity",
+        "type": "string",
+        "value": ""
+      },
+      {
+        "name": "height",
+        "type": "float",
+        "value": 16
+      },
+      {
+        "name": "width",
+        "type": "float",
+        "value": 16
+      }
+    ]
+  }
+]

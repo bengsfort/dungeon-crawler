@@ -1,6 +1,14 @@
 let id = 0;
 
 export class Vector2 {
+  // Helpers
+  public static readonly Down = new Vector2(0, -1);
+  public static readonly Up = new Vector2(0, 1);
+  public static readonly Left = new Vector2(-1, 0);
+  public static readonly Right = new Vector2(1, 0);
+  public static readonly One = new Vector2(1, 1);
+  public static readonly Zero = new Vector2(0, 0);
+
   public x = 0;
   public y = 0;
 
@@ -31,5 +39,9 @@ export class Vector2 {
   multiply(val: number): void {
     this.x *= val;
     this.y *= val;
+  }
+
+  equals(val: Vector2): boolean {
+    return val.x === this.x && val.y === this.y;
   }
 }
