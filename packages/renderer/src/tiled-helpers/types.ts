@@ -19,19 +19,19 @@ export enum TiledLayerType {
 
 export type TiledEditorSettings = {
   export: {
-    format: "json";
+    format: string;
     target: string;
   };
 };
 
 export type TiledMapLayer = {
-  data: number[];
-  height: number;
-  width: number;
+  data?: number[];
+  height?: number;
+  width?: number;
   id: number;
   name: string;
   opacity: number;
-  type: TiledLayerType;
+  type: string | TiledLayerType;
   visible: boolean;
   x: number;
   y: number;
@@ -66,10 +66,10 @@ export type TiledMap = {
   infinite: boolean;
   nextlayerid: number;
   nextobjectid: number;
-  orientation: TiledOrientation;
-  renderorder: TiledRenderOrder;
+  orientation: string | TiledOrientation;
+  renderorder: string | TiledRenderOrder;
   tiledversion: string;
-  type: "map";
+  type: string;
   version: number;
   layers: TiledMapLayer[];
 };
@@ -86,6 +86,6 @@ export type TiledTileset = {
   tiledversion: string;
   tileheight: number;
   tilewidth: number;
-  type: "tileset";
+  type: string;
   version: number;
 };

@@ -5,6 +5,8 @@ import {
   resizeCanvas,
 } from "./canvas";
 
+import { TiledMap } from "./tiled-helpers/types";
+
 type DrawableHandler = (canvas: EditableCanvas, timestamp?: number) => void;
 
 let drawableCounter = 0;
@@ -63,7 +65,11 @@ export const removeDrawable = (id: number): void => {
     drawables.delete(id);
   } else {
     console.warn(
-      `[WebRenderer] Trying to remove drawable that does not exist (id: ${id}`
+      `[WebRenderer] Trying to remove drawable that does not exist (id: ${id})`
     );
   }
+};
+
+export const loadWorld = (tilemap: TiledMap): void => {
+  console.log("got a tiledmap:", tilemap);
 };

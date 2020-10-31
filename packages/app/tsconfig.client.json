@@ -1,5 +1,5 @@
 {
-  "include": ["./src/client/**/*"],
+  "include": ["./src/client/**/*", "./src/client/**/*.json"],
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src/client",
@@ -9,7 +9,8 @@
       "@dungeon-crawler/core": ["../core"],
       "@dungeon-crawler/renderer": ["../renderer"],
       "@dungeon-crawler/runtime": ["../runtime"]
-    }
+    },
+    "resolveJsonModule": true
   },
   "references": [
     { "path": "../core" },
