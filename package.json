@@ -9,6 +9,7 @@
   "workspaces": [
     "packages/eslint-plugin",
     "packages/core",
+    "packages/network",
     "packages/renderer",
     "packages/runtime",
     "packages/module-tests",

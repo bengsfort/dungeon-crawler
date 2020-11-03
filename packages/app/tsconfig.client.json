@@ -7,6 +7,7 @@
     "baseUrl": "./src",
     "paths": {
       "@dungeon-crawler/core": ["../core"],
+      "@dungeon-crawler/network": ["../network"],
       "@dungeon-crawler/renderer": ["../renderer"],
       "@dungeon-crawler/runtime": ["../runtime"]
     },
@@ -14,6 +15,7 @@
   },
   "references": [
     { "path": "../core" },
+    { "path": "../network" },
     { "path": "../renderer" },
     { "path": "../runtime" }
   ]

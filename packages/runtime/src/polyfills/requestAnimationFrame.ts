@@ -1,4 +1,4 @@
-import { now } from "./performance-now";
+import { now } from "@dungeon-crawler/core";
 
 type RafCallback = (timestamp: number) => void;
 type RafItem = {
