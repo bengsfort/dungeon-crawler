@@ -4,13 +4,14 @@ import {
   editCanvas,
   resizeCanvas,
 } from "./canvas";
+import { TiledMap, TiledTileset } from "./tiled-helpers/types";
+import { initWorldConfig, loadTileset } from "./tiled-helpers";
 
-import { TiledMap } from "./tiled-helpers/types";
-
-type DrawableHandler = (canvas: EditableCanvas, timestamp?: number) => void;
+import { DrawableHandler } from "./types";
 
 let drawableCounter = 0;
 const drawables = new Map<number, DrawableHandler>();
+let baseWorldDrawHandler: DrawableHandler = () => {};
 
 let activeCanvas: HTMLCanvasElement;
 let editableCanvas: EditableCanvas;
@@ -35,6 +36,7 @@ type RenderLoop = (timestamp: number | undefined) => void;
 const renderLoop: RenderLoop = (timestamp = 0): void => {
   if (pause) return;
   editableCanvas.clearAll();
+  baseWorldDrawHandler(editableCanvas, timestamp);
   drawables.forEach((handler) => handler(editableCanvas, timestamp));
 };
 
@@ -70,6 +72,17 @@ export const removeDrawable = (id: number): void => {
   }
 };
 
-export const loadWorld = (tilemap: TiledMap): void => {
-  console.log("got a tiledmap:", tilemap);
+// This should probably be somewhere else.
+export const loadWorld = async (
+  tilemap: TiledMap,
+  tileset: TiledTileset
+): Promise<void> => {
+  const spritesheet = loadTileset(tileset);
+  await spritesheet.isReady();
+  const drawHandler = initWorldConfig(tilemap, spritesheet);
+  baseWorldDrawHandler = drawHandler;
+};
+
+export const pauseRenderer = (shouldPause: boolean): void => {
+  pause = shouldPause;
 };

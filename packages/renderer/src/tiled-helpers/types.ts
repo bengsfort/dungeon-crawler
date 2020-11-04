@@ -72,6 +72,7 @@ export type TiledMap = {
   type: string;
   version: number;
   layers: TiledMapLayer[];
+  tilesets: { firstgid: number; source: string }[];
 };
 
 export type TiledTileset = {

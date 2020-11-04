@@ -12,18 +12,24 @@ cancelButton.onclick = () => {
   GameLoop.stop();
 };
 
-async function getWorld(): Promise<TiledHelpers.TiledMap> {
+// @todo: lazy load tilemap
+async function getWorld(): Promise<{
+  map: TiledHelpers.TiledMap;
+  tileset: TiledHelpers.TiledTileset;
+}> {
   // const { map, tiles } = (await import("./loaders/sandbox")) as {
   //   map: TiledHelpers.TiledMap;
   //   tiles: TiledHelpers.TiledTileset;
   // };
   // return map;
-  return Promise.resolve(map);
+  return Promise.resolve({ map, tileset: tiles });
 }
 
 function main() {
   Client.connect("ws://127.0.0.1:3000/socket");
-  void getWorld().then((map) => void WebRenderer.loadWorld(map));
+  void getWorld().then(
+    ({ map, tileset }) => void WebRenderer.loadWorld(map, tileset)
+  );
   GameLoop.registerPostUpdateHandler("renderer", WebRenderer.create());
   GameLoop.start(() => {});
 }

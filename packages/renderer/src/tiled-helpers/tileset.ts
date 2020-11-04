@@ -1,4 +1,6 @@
-import { TiledMap, TiledTileset } from "./types";
+import { Spritesheet, getSpritesheet, loadSpritesheet } from "../spritesheets";
+
+import { TiledTileset } from "./types";
 
 // TODO: TILEMAPS
 // TODO: Import tilemap json
@@ -7,6 +9,10 @@ import { TiledMap, TiledTileset } from "./types";
 // TODO: Load spritesheet using spritesheet manager
 // TODO: Render tilemap using parsed tilemap json
 
-export const readyTilemap = (map: TiledMap, tileset: TiledTileset): void => {
-  console.log(map, tileset);
+export const loadTileset = (tileset: TiledTileset): Spritesheet => {
+  const spritesheet = getSpritesheet(tileset.image);
+  if (spritesheet) {
+    return spritesheet;
+  }
+  return loadSpritesheet(tileset.image, tileset.tilewidth, tileset.tileheight);
 };

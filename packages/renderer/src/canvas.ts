@@ -1,5 +1,3 @@
-import { Sprite } from "./sprites";
-
 // client/renderer/canvas.ts
 // This module is responsible for utility functions related to creating,
 // managing, and interacting with a 2D canvas.
@@ -24,7 +22,6 @@ export function resizeCanvas(
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   ctx.fillRect(0, 0, width, height);
-  console.log("Does this actually work?!");
 }
 
 /**
@@ -58,13 +55,20 @@ export function createCanvas(): HTMLCanvasElement {
 export interface EditableCanvas {
   getContext(): CanvasRenderingContext2D;
   drawSprite(
-    sprite: Sprite,
+    sprite: ImageBitmap,
     x: number,
     y: number,
     scale?: number
   ): EditableCanvas;
+  drawRect(
+    color: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): EditableCanvas;
   clear(width: number, height: number, x?: number, y?: number): EditableCanvas;
-  clearAll(): EditableCanvas;
+  clearAll(color?: string): EditableCanvas;
 }
 export function editCanvas(canvas: HTMLCanvasElement): EditableCanvas {
   const context = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -73,9 +77,9 @@ export function editCanvas(canvas: HTMLCanvasElement): EditableCanvas {
     getContext() {
       return context;
     },
-    drawSprite(sprite: Sprite, x: number, y: number, scale = 1) {
+    drawSprite(sprite, x, y, scale = 1) {
       context.drawImage(
-        sprite.data,
+        sprite,
         x,
         y,
         sprite.width * scale,
@@ -83,12 +87,18 @@ export function editCanvas(canvas: HTMLCanvasElement): EditableCanvas {
       );
       return this;
     },
+    drawRect(color, x, y, width, height) {
+      context.fillStyle = color;
+      context.fillRect(x, y, width, height);
+      return this;
+    },
     clear(width: number, height: number, x = 0, y = 0) {
       context.clearRect(x, y, width, height);
       return this;
     },
-    clearAll() {
+    clearAll(color = "#000000") {
       context.clearRect(0, 0, canvas.width, canvas.height);
+      this.drawRect(color, 0, 0, canvas.width, canvas.height);
       return this;
     },
   };

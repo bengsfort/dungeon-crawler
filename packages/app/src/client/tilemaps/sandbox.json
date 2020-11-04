@@ -2043,7 +2043,7 @@
   "nextlayerid": 4,
   "nextobjectid": 12,
   "orientation": "isometric",
-  "renderorder": "right-down",
+  "renderorder": "left-down",
   "tiledversion": "1.4.2",
   "tileheight": 16,
   "tilesets": [
