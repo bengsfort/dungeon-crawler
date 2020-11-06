@@ -1,4 +1,4 @@
-import { Actor } from "../actors/actor";
+import { Entity } from "../entities";
 
 export enum ControllerId {
   PlayerInputController = "player_input_controller",
@@ -8,6 +8,6 @@ export type ControllerInstance = {
   (): void;
 };
 export type Controller = {
-  (entity: Actor): ControllerInstance;
+  (entity: Entity): ControllerInstance;
   ID: ControllerId;
 };
