@@ -9,6 +9,23 @@ export class Vector2 {
   public static readonly One = new Vector2(1, 1);
   public static readonly Zero = new Vector2(0, 0);
 
+  // Static Helpers
+  public static Add(v1: Vector2, v2: Vector2): Vector2 {
+    return new Vector2(v1.x + v2.x, v1.y + v2.y);
+  }
+
+  public static Subtract(v1: Vector2, v2: Vector2): Vector2 {
+    return new Vector2(v1.x - v2.x, v1.y - v2.y);
+  }
+
+  public static Multiply(v1: Vector2, v2: Vector2): Vector2 {
+    return new Vector2(v1.x * v2.x, v1.y * v2.y);
+  }
+
+  public static Divide(v1: Vector2, v2: Vector2): Vector2 {
+    return new Vector2(v1.x / v2.x, v1.y / v2.y);
+  }
+
   public x = 0;
   public y = 0;
 
@@ -22,7 +39,7 @@ export class Vector2 {
     return x * x + y * y;
   }
 
-  constructor(x: number, y: number) {
+  constructor(x = 0, y = 0) {
     this.x = x;
     this.y = y;
   }
