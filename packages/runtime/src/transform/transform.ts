@@ -1,20 +1,31 @@
+import { Entity } from "../entities";
 import { Vector2 } from "@dungeon-crawler/core";
 
 export class Transform {
   private _position: Vector2;
   private _rotation: number;
   private _scale: Vector2;
-  // @todo: Test if this should be a direct reference or relational reference
+  private _entity: Entity | null;
+
   parent: Transform | null;
   children: Transform[];
 
-  constructor(pos = new Vector2(0, 0), scale = new Vector2(1, 1)) {
+  constructor(
+    pos = new Vector2(0, 0),
+    scale = new Vector2(1, 1),
+    entity: Entity | null = null
+  ) {
     this._position = pos;
     this._rotation = 0;
     this._scale = scale;
+    this._entity = entity;
 
     this.parent = null;
     this.children = [];
+  }
+
+  get entity(): Entity | null {
+    return this._entity;
   }
 
   set position(pos: Vector2) {
@@ -48,5 +59,11 @@ export class Transform {
       return Vector2.Add(this._scale, parentScale);
     }
     return this._scale;
+  }
+
+  addChild(child: Transform): void {
+    if (this.children.includes(child)) return;
+    this.children.push(child);
+    child.parent = this;
   }
 }

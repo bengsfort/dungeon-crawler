@@ -17,11 +17,11 @@
             "scaleInEditor": 1
         },
         "sandbox.json": {
-            "scale": 1,
+            "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 450,
-                "y": 227
+                "x": 501.6666666666667,
+                "y": 117.33333333333333
             }
         },
         "sandbox.tmx": {

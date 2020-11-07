@@ -6,11 +6,9 @@
     "outDir": "dist/server",
     "baseUrl": "./src",
     "paths": {
-      "@dungeon-crawler/network": ["../network"],
+      "@dungeon-crawler/network": ["../network"]
     },
-    "importHelpers": true,
+    "importHelpers": true
   },
-  "references": [
-    { "path": "../network" },
-  ]
+  "references": [{ "path": "../network" }]
 }

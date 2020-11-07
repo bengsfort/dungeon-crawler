@@ -8,7 +8,5 @@
       "@dungeon-crawler/core": ["../core"]
     }
   },
-  "references": [
-    { "path": "../core" }
-  ]
+  "references": [{ "path": "../core" }]
 }

@@ -2,10 +2,9 @@
 
 import * as Client from "@dungeon-crawler/network/dist/client";
 
+import { GameLoop, initWorldConfig } from "@dungeon-crawler/runtime";
 import { TiledHelpers, WebRenderer } from "@dungeon-crawler/renderer";
 import { map, tiles } from "./loaders/sandbox";
-
-import { GameLoop } from "@dungeon-crawler/runtime";
 
 const cancelButton = document.getElementById("cancel") as HTMLButtonElement;
 cancelButton.onclick = () => {
@@ -27,11 +26,14 @@ async function getWorld(): Promise<{
 
 function main() {
   Client.connect("ws://127.0.0.1:3000/socket");
-  void getWorld().then(
-    ({ map, tileset }) => void WebRenderer.loadWorld(map, tileset)
-  );
   GameLoop.registerPostUpdateHandler("renderer", WebRenderer.create());
-  GameLoop.start(() => {});
+  GameLoop.start(() => {
+    void getWorld().then(({ map }) => {
+      const world = initWorldConfig(map);
+      console.log(world);
+      return;
+    });
+  });
 }
 
 main();

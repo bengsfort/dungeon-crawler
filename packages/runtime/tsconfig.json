@@ -5,7 +5,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@dungeon-crawler/core": ["../core"],
+      "@dungeon-crawler/core": ["../core"]
     }
   },
   "references": [{ "path": "../core" }]
