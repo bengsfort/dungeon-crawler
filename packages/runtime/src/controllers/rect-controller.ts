@@ -33,7 +33,7 @@ export class RectController extends BaseController {
   tick = (): void => {
     const { _drawable, entity } = this;
     _drawable.data.scale = entity.transform.scale;
-    _drawable.data.position = entity?.transform.position;
+    _drawable.data.position = entity.transform.position;
     this._renderer.render(_drawable);
   };
 }
