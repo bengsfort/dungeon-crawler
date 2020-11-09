@@ -56,7 +56,7 @@ export class Transform {
   get scale(): Vector2 {
     const parentScale = this.parent?.scale;
     if (parentScale) {
-      return Vector2.Add(this._scale, parentScale);
+      return Vector2.Multiply(this._scale, parentScale);
     }
     return this._scale;
   }

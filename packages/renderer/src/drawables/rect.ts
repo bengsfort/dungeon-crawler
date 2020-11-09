@@ -86,7 +86,7 @@ export const drawRect = (
   ctx.fillStyle = color;
   const originX = origin.x * width;
   const originY = origin.y * height;
-  const pos = canvas.toScreen(position.x, position.y);
+  const pos = canvas.toScreen(position.x * scale.x, position.y * scale.y);
   ctx.fillRect(
     pos.x - originX,
     pos.y - originY,
