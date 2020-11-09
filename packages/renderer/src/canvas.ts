@@ -75,7 +75,7 @@ export interface EditableCanvas {
 }
 export function editCanvas(
   canvas: HTMLCanvasElement,
-  ppc: number
+  ppc: Vector2
 ): EditableCanvas {
   const context = canvas.getContext("2d") as CanvasRenderingContext2D;
   return {
@@ -83,7 +83,7 @@ export function editCanvas(
       return context;
     },
     toScreen(x, y) {
-      return new Vector2(x * ppc, y * ppc);
+      return new Vector2(x * ppc.x, y * ppc.y);
     },
     drawSprite(sprite, x, y, scale = 1) {
       context.drawImage(

@@ -3,10 +3,12 @@ import {
   DrawableOpts,
 } from "@dungeon-crawler/renderer/dist/drawables";
 
+import { Vector2 } from "@dungeon-crawler/core";
+
 export interface Renderer {
   pause(): void;
   unpause(): void;
-  setCoordsSize(size: number): void;
+  setCoordsSize(size: Vector2): void;
   render<T extends DrawableOpts>(drawable: Drawable<T>): void;
 }
 

@@ -8,7 +8,7 @@ import {
   Runtime,
   TiledMap,
   TiledTileset,
-  initWorldConfig,
+  World,
 } from "@dungeon-crawler/runtime";
 import { map, tiles } from "./loaders/sandbox";
 
@@ -49,7 +49,7 @@ function main() {
   });
   GameLoop.start(() => {
     void getWorld().then(({ map }) => {
-      const world = initWorldConfig(map);
+      const world = new World(map);
       console.log(world);
       return;
     });

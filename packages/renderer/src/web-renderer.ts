@@ -6,6 +6,8 @@ import {
   resizeCanvas,
 } from "./canvas";
 
+import { Vector2 } from "@dungeon-crawler/core";
+
 // import { TiledMap, TiledTileset } from "../../runtime/src/utils/types";
 // import { initWorldConfig, loadTileset } from "./tiled-helpers";
 
@@ -13,7 +15,7 @@ const drawables: Drawable<DrawableOpts>[] = [];
 
 let activeCanvas: HTMLCanvasElement;
 let editableCanvas: EditableCanvas;
-let pixelsPerCoordinate = 32;
+let pixelsPerCoordinate = new Vector2(32, 16);
 let isPaused = false;
 
 export const pause = (): void => {
@@ -67,7 +69,7 @@ export const render = <T extends DrawableOpts>(drawable: Drawable<T>): void => {
   drawables.push(drawable);
 };
 
-export const setCoordsSize = (size: number): void => {
+export const setCoordsSize = (size: Vector2): void => {
   pixelsPerCoordinate = size;
 };
 

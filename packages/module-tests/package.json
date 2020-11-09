@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "node ../../build-scripts/watch-client.js --port 3000",
-    "build": "rollup -c",
+    "build": "echo 'skipping, module not needed anymore probably'",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   }
 }
