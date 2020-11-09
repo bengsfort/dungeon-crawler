@@ -91,7 +91,6 @@ export const initWorldConfig = (map: TiledMap): World => {
     new Vector2(1, 1),
     map.editorsettings.export.target
   );
-  // @todo: Better API for controllers, this blows
   world.addController(
     new RectController({
       width: map.tilewidth * map.width,
