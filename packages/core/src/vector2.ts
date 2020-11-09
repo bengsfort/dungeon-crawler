@@ -29,8 +29,8 @@ export class Vector2 {
   public x = 0;
   public y = 0;
 
-  private _id = `vector2_${++id}`;
-  public get id(): string {
+  private _id = ++id;
+  public get id(): number {
     return this._id;
   }
 
