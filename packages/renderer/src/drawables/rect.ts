@@ -1,7 +1,7 @@
-import { Entity, Vector2 } from "@dungeon-crawler/core";
+import { Drawable, DrawableOpts, DrawableType } from "./types";
 
 import { EditableCanvas } from "../canvas";
-import { registerDrawable } from "../web-renderer";
+import { Vector2 } from "@dungeon-crawler/core";
 
 // Drawable registration/binding:
 // Entity uses exposed function to register a drawable
@@ -18,49 +18,90 @@ import { registerDrawable } from "../web-renderer";
 
 let idCounter = 0;
 
-interface RectOpts {
+export interface RectOpts extends DrawableOpts {
   height: number;
   width: number;
   color: string;
+  scale: Vector2;
+  position: Vector2;
   origin?: Vector2;
+  DEBUG_showOrigin?: boolean;
 }
 
 export interface RectAttrs extends RectOpts {
   id: string;
   origin: Vector2;
+  position: Vector2;
 }
 
 const DEFAULT_OPTS = {
-  origin: new Vector2(0.5, 0.5),
+  scale: new Vector2(1, 1),
+  origin: new Vector2(0, 0),
+  position: new Vector2(0, 0),
 };
 
-export const bindRect = (instance: Entity, opts: RectOpts): RectAttrs => {
-  const id = `drawable::rect::${++idCounter}`;
-  const { height, width, origin = DEFAULT_OPTS.origin, color } = opts;
+export const createRect = (opts: RectOpts): Drawable<RectAttrs> => {
+  const id = `drawable::rect:${++idCounter}`;
+  const {
+    height,
+    width,
+    color,
+    scale = DEFAULT_OPTS.scale,
+    origin = DEFAULT_OPTS.origin,
+    position = DEFAULT_OPTS.position,
+    DEBUG_showOrigin,
+  } = opts;
 
-  const attrs: RectAttrs = {
+  const data: RectAttrs = {
     id,
     height,
     width,
     origin,
     color,
+    scale,
+    position,
+    DEBUG_showOrigin,
   };
 
-  const handler = (canvas: EditableCanvas) => {
-    const ctx = canvas.getContext();
-    ctx.fillStyle = color;
-    const originX = attrs.origin.x * attrs.width;
-    const originY = attrs.origin.y * attrs.height;
-    ctx.fillRect(
-      instance.position.x - originX,
-      instance.position.y - originY,
-      attrs.width,
-      attrs.height
-    );
+  return {
+    type: DrawableType.Rect,
+    data,
+  };
+};
+
+export const drawRect = (
+  renderable: Drawable<RectAttrs>,
+  canvas: EditableCanvas
+): void => {
+  const {
+    width,
+    height,
+    color,
+    scale,
+    origin,
+    position,
+    DEBUG_showOrigin,
+  } = renderable.data;
+  const ctx = canvas.getContext();
+  ctx.fillStyle = color;
+  const originX = origin.x * width;
+  const originY = origin.y * height;
+  const pos = canvas.toScreen(position.x, position.y);
+  ctx.fillRect(
+    pos.x - originX,
+    pos.y - originY,
+    width * scale.x,
+    height * scale.y
+  );
+  if (DEBUG_showOrigin) {
     ctx.fillStyle = "#aeae00";
-    ctx.fillRect(instance.position.x - 4, instance.position.y - 4, 8, 8);
-  };
-
-  registerDrawable(handler);
-  return attrs;
+    ctx.strokeStyle = "#000";
+    ctx.strokeRect(
+      pos.x - originX,
+      pos.y - originY,
+      width * scale.x,
+      height * scale.y
+    );
+    ctx.fillRect(pos.x - 4, pos.y - 4, 8, 8);
+  }
 };

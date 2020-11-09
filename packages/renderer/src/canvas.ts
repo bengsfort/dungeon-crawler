@@ -2,6 +2,8 @@
 // This module is responsible for utility functions related to creating,
 // managing, and interacting with a 2D canvas.
 
+import { Vector2 } from "@dungeon-crawler/core";
+
 /**
  * Resizes the canvas based on the width + pixel ratio of the device.
  *
@@ -54,6 +56,7 @@ export function createCanvas(): HTMLCanvasElement {
 
 export interface EditableCanvas {
   getContext(): CanvasRenderingContext2D;
+  toScreen(x: number, y: number): Vector2;
   drawSprite(
     sprite: ImageBitmap,
     x: number,
@@ -70,12 +73,17 @@ export interface EditableCanvas {
   clear(width: number, height: number, x?: number, y?: number): EditableCanvas;
   clearAll(color?: string): EditableCanvas;
 }
-export function editCanvas(canvas: HTMLCanvasElement): EditableCanvas {
+export function editCanvas(
+  canvas: HTMLCanvasElement,
+  ppc: number
+): EditableCanvas {
   const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-
   return {
     getContext() {
       return context;
+    },
+    toScreen(x, y) {
+      return new Vector2(x * ppc, y * ppc);
     },
     drawSprite(sprite, x, y, scale = 1) {
       context.drawImage(

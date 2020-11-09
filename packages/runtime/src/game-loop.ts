@@ -1,13 +1,12 @@
 import { caf, raf } from "./polyfills";
 
-import { ActorDirectory } from "./actors";
-
 const NOOP = () => {};
 
 // Internal game loop state
 let rafId = 0;
-const updateHandlers = new Map<string, (timestamp?: number) => void>();
-const postUpdateHandlers = new Map<string, (timestamp?: number) => void>();
+let id = 0;
+const updateHandlers = new Map<number, (timestamp: number) => void>();
+const postUpdateHandlers = new Map<number, (timestamp: number) => void>();
 
 function update(timestamp = 0): void {
   rafId = raf(update);
@@ -20,41 +19,44 @@ function update(timestamp = 0): void {
 }
 
 export const start = (setup = NOOP): void => {
-  ActorDirectory.flush();
+  console.log("Starting game loop.");
   setup();
   update();
 };
 
 export const stop = (): void => {
   caf(rafId);
+  console.log("Stopping game loop.");
 };
 
 export const registerUpdateHandler = (
-  id: string,
   handler: (timestamp?: number) => void
-): void => {
-  if (!updateHandlers.has(id)) {
-    updateHandlers.set(id, handler);
-  }
+): number => {
+  const handlerId = ++id;
+  updateHandlers.set(handlerId, handler);
+  return handlerId;
 };
 
-export const removeUpdateHandler = (id: string): void => {
+export const removeUpdateHandler = (id: number): boolean => {
   if (updateHandlers.has(id)) {
     updateHandlers.delete(id);
+    return true;
   }
+  return false;
 };
 
 export const registerPostUpdateHandler = (
-  id: string,
   handler: (timestamp?: number) => void
-): void => {
-  if (!postUpdateHandlers.has(id)) {
-    updateHandlers.set(id, handler);
-  }
+): number => {
+  const handlerId = ++id;
+  updateHandlers.set(handlerId, handler);
+  return handlerId;
 };
 
-export const removePostUpdateHandler = (id: string): void => {
+export const removePostUpdateHandler = (id: number): boolean => {
   if (postUpdateHandlers.has(id)) {
     postUpdateHandlers.delete(id);
+    return true;
   }
+  return false;
 };

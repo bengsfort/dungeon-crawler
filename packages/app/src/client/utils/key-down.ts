@@ -3,6 +3,8 @@ export enum Controls {
   A = "a",
   S = "s",
   D = "d",
+  Space = " ",
+  Control = "Control",
 }
 
 const keys = new Map<Controls, boolean>();
@@ -14,6 +16,7 @@ for (const control in Controls) {
 
 // keyboard event handling
 window.onkeydown = ({ key }: KeyboardEvent): void => {
+  console.log(key);
   if (keys.has(key as Controls)) {
     keys.set(key as Controls, true);
   }

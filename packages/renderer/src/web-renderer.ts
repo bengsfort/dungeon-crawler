@@ -1,29 +1,35 @@
+import { Drawable, DrawableOpts, renderDrawable } from "./drawables";
 import {
   EditableCanvas,
   createCanvas,
   editCanvas,
   resizeCanvas,
 } from "./canvas";
-import { TiledMap, TiledTileset } from "./tiled-helpers/types";
-import { initWorldConfig, loadTileset } from "./tiled-helpers";
 
-import { DrawableHandler } from "./types";
+// import { TiledMap, TiledTileset } from "../../runtime/src/utils/types";
+// import { initWorldConfig, loadTileset } from "./tiled-helpers";
 
-let drawableCounter = 0;
-const drawables = new Map<number, DrawableHandler>();
-let baseWorldDrawHandler: DrawableHandler = () => {};
+const drawables: Drawable<DrawableOpts>[] = [];
 
 let activeCanvas: HTMLCanvasElement;
 let editableCanvas: EditableCanvas;
+let pixelsPerCoordinate = 32;
+let isPaused = false;
 
-let pause = false;
+export const pause = (): void => {
+  isPaused = true;
+};
+
+export const unpause = (): void => {
+  isPaused = false;
+};
 
 const blurHandler = () => {
-  pause = true;
+  pause();
 };
 
 const focusHandler = () => {
-  pause = false;
+  unpause();
 };
 
 const resizeHandler = () => {
@@ -33,21 +39,22 @@ const resizeHandler = () => {
 };
 
 type RenderLoop = (timestamp: number | undefined) => void;
-const renderLoop: RenderLoop = (timestamp = 0): void => {
-  if (pause) return;
+const renderLoop: RenderLoop = (): void => {
+  if (isPaused) return;
   editableCanvas.clearAll();
-  baseWorldDrawHandler(editableCanvas, timestamp);
-  drawables.forEach((handler) => handler(editableCanvas, timestamp));
+  const loopDrawables = drawables.splice(0);
+  for (let i = 0; i < loopDrawables.length; i++) {
+    renderDrawable(loopDrawables[i], editableCanvas);
+  }
 };
 
 export const create = (): RenderLoop => {
   // Reset queue
-  drawables.clear();
-  drawableCounter = 0;
+  drawables.splice(0);
 
   // Create canvas/renderer
   activeCanvas = createCanvas();
-  editableCanvas = editCanvas(activeCanvas);
+  editableCanvas = editCanvas(activeCanvas, pixelsPerCoordinate);
   window.addEventListener("resize", resizeHandler);
   window.addEventListener("blur", blurHandler);
   window.addEventListener("focus", focusHandler);
@@ -56,33 +63,17 @@ export const create = (): RenderLoop => {
   return renderLoop;
 };
 
-export const registerDrawable = (handler: DrawableHandler): number => {
-  const id = ++drawableCounter;
-  drawables.set(id, handler);
-  return id;
+export const render = <T extends DrawableOpts>(drawable: Drawable<T>): void => {
+  drawables.push(drawable);
 };
 
-export const removeDrawable = (id: number): void => {
-  if (drawables.has(id)) {
-    drawables.delete(id);
-  } else {
-    console.warn(
-      `[WebRenderer] Trying to remove drawable that does not exist (id: ${id})`
-    );
-  }
+export const setCoordsSize = (size: number): void => {
+  pixelsPerCoordinate = size;
 };
 
-// This should probably be somewhere else.
-export const loadWorld = async (
-  tilemap: TiledMap,
-  tileset: TiledTileset
-): Promise<void> => {
-  const spritesheet = loadTileset(tileset);
-  await spritesheet.isReady();
-  const drawHandler = initWorldConfig(tilemap, spritesheet);
-  baseWorldDrawHandler = drawHandler;
-};
-
-export const pauseRenderer = (shouldPause: boolean): void => {
-  pause = shouldPause;
+export const renderInterface = {
+  pause,
+  unpause,
+  setCoordsSize,
+  render,
 };

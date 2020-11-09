@@ -1,3 +1,4 @@
+import { RectController, TestMovementController } from "../controllers";
 import {
   TiledLayerType,
   TiledMap,
@@ -8,6 +9,7 @@ import {
 import { Entity } from "../entities";
 import { Vector2 } from "@dungeon-crawler/core";
 import { World } from "../world";
+import { getRenderer } from "../runtime";
 
 const getTileX = (
   index: number,
@@ -66,17 +68,38 @@ const layerInitializer = (
     x = getTileX(i, layer, map.renderorder as TiledRenderOrder);
     y = getTileY(i, layer, map.renderorder as TiledRenderOrder);
     const entity = new Entity(new Vector2(x, y));
+    entity.addController(
+      new RectController({
+        width: map.tilewidth,
+        height: map.tileheight,
+        color: "#ababab",
+      })
+    );
     layerEntity.addChild(entity);
   }
   return layerEntity;
 };
 
+// @todo: Move this into the World class, have it manage itself
 export const initWorldConfig = (map: TiledMap): World => {
+  const renderer = getRenderer();
+  if (renderer) {
+    renderer.setCoordsSize(map.tilewidth);
+  }
   const world = new World(
     new Vector2(0, 0),
     new Vector2(1, 1),
     map.editorsettings.export.target
   );
+  // @todo: Better API for controllers, this blows
+  world.addController(
+    new RectController({
+      width: map.tilewidth * map.width,
+      height: map.tileheight * map.height,
+      color: "#a475b7",
+    })
+  );
+  world.addController(new TestMovementController({ speed: 2 }));
   let layer;
   for (let i = 0; i < map.layers.length; i++) {
     layer = layerInitializer(map.layers[i], map);

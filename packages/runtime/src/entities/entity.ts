@@ -1,44 +1,45 @@
-import { Controller, ControllerInstance } from "../controllers";
-import { registerUpdateHandler, removeUpdateHandler } from "../game-loop";
-
+import { Controller } from "../controllers";
 import { Transform } from "../transform";
 import { Vector2 } from "@dungeon-crawler/core";
 
 let idCounter = 0;
 
 export class Entity {
-  public readonly id = `entity::${++idCounter}`;
+  public readonly id = ++idCounter;
   public readonly name: string;
   active: boolean;
   transform: Transform;
-  private _controllers: Map<string, ControllerInstance>;
+  private _controllers: Map<number, Controller>;
 
   constructor(pos = new Vector2(0, 0), scale = new Vector2(1, 1), name = "") {
-    this.name = name || this.id;
+    this.name = name || this.id.toString();
     this.transform = new Transform(pos, scale, this);
-    this._controllers = new Map<string, ControllerInstance>();
+    this._controllers = new Map<number, Controller>();
     this.active = true;
   }
 
   addController(controller: Controller): void {
-    const { id, _controllers } = this;
-    if (!_controllers.has(controller.ID)) {
-      const handler = controller(this);
-      _controllers.set(controller.ID, handler);
-      registerUpdateHandler(`${id}::${controller.ID as string}`, handler);
+    const { _controllers } = this;
+    if (!_controllers.has(controller.id)) {
+      _controllers.set(controller.id, controller);
+      controller.setEntity(this);
+      controller.setActive(true);
     }
   }
 
-  getController(controllerId: string): ControllerInstance | undefined {
+  getController(controllerId: number): Controller | undefined {
     const { _controllers } = this;
     if (_controllers.has(controllerId)) {
       return _controllers.get(controllerId);
     }
   }
 
-  removeController(controllerId: string): void {
-    this._controllers.delete(this.id);
-    removeUpdateHandler(`${this.id}::${controllerId}`);
+  removeController(controllerId: number): void {
+    const controller = this._controllers.get(controllerId);
+    if (controller) {
+      controller.unsetEntity();
+      this._controllers.delete(controllerId);
+    }
   }
 
   addChild(child: Entity | Transform): void {

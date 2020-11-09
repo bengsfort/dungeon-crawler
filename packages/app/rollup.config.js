@@ -29,7 +29,12 @@ export default {
     }),
     json(),
     assets({
-      assets: ["src/client/tilemaps", "src/client/sprites"],
+      assets: [
+        "src/client/tilemaps",
+        "src/client/sprites",
+        "src/client/css",
+        "src/client/favicon.ico",
+      ],
     }),
   ],
 };

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@dungeon-crawler/core": "^0.1.0",
+    "@dungeon-crawler/renderer": "^0.1.0",
     "@types/stats.js": "^0.17.0",
     "stats.js": "^0.17.0"
   }
