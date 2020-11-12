@@ -2,6 +2,17 @@
 
 ---
 
+What to work on next?
+
+- Add time module
+- Get runtime running on server
+- Add a "addPlayer" interface to runtime, make server assign random position to each player on join
+- Render each player on each client
+- Try passing local movement in, see what happens
+  - any input source / management changes should happen now...
+- Protobuf compatibility after?
+- Once we have movement working, then continue with rendering?
+
 ## Rendering
 
 From conversation with Göksel:
@@ -39,6 +50,7 @@ From conversation with Göksel:
 
 ### NEXT STEPS
 
+- Time class/module that tracks current time, time difference between client/server, tick duration, etc.
 - Expose coordinate transformation functions for/from World (transform from normal to isometric)
 - Define proper interface for `InputManager` (in `runtime/runtime.ts`)
   - This should be an interface that things such as Player character controllers can use to react to inputs
@@ -49,3 +61,9 @@ From conversation with Göksel:
 
 - Client should only focus on forwarding input/local interactions to the renderer and runtime
 - Server should only focus on forwarding/synching networking with the runtime
+
+### NEXT STEPS
+
+- Add debug text on client (fps, ping, server time diff, etc.)
+- Get runtime running on the server!
+- Try to pass player movement / render players on each client!
