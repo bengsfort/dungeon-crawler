@@ -5,18 +5,19 @@ import { Vector2 } from "@dungeon-crawler/core";
 
 let idCounter = 0;
 
-// @todo: add opacity?
-export interface RectOpts extends DrawableOpts {
+// @todo: Add opacity?
+export interface SpriteOpts extends DrawableOpts {
   height: number;
   width: number;
   color: string;
   scale: Vector2;
   position: Vector2;
+  image: ImageBitmap;
   origin?: Vector2;
   DEBUG_showOrigin?: boolean;
 }
 
-export interface RectAttrs extends RectOpts {
+export interface SpriteAttrs extends SpriteOpts {
   id: string;
   origin: Vector2;
   position: Vector2;
@@ -28,37 +29,39 @@ const DEFAULT_OPTS = {
   position: new Vector2(0, 0),
 };
 
-export const createRect = (opts: RectOpts): Drawable<RectAttrs> => {
+export const createSprite = (opts: SpriteOpts): Drawable<SpriteAttrs> => {
   const id = `drawable::rect:${++idCounter}`;
   const {
     height,
     width,
     color,
+    image,
     scale = DEFAULT_OPTS.scale,
     origin = DEFAULT_OPTS.origin,
     position = DEFAULT_OPTS.position,
     DEBUG_showOrigin,
   } = opts;
 
-  const data: RectAttrs = {
+  const data: SpriteAttrs = {
     id,
     height,
     width,
     origin,
     color,
+    image,
     scale,
     position,
     DEBUG_showOrigin,
   };
 
   return {
-    type: DrawableType.Rect,
+    type: DrawableType.Sprite,
     data,
   };
 };
 
-export const drawRect = (
-  renderable: Drawable<RectAttrs>,
+export const drawSprite = (
+  renderable: Drawable<SpriteAttrs>,
   canvas: EditableCanvas
 ): void => {
   const {
@@ -66,6 +69,7 @@ export const drawRect = (
     height,
     color,
     scale,
+    image,
     origin,
     position,
     DEBUG_showOrigin,
@@ -74,12 +78,13 @@ export const drawRect = (
   ctx.fillStyle = color;
   const originX = origin.x * width;
   const originY = origin.y * height;
-  // @todo: this should be configurable.
+  // @todo: This should be configurable.
   const pos = canvas.toScreenIsometric(
     position.x * scale.x,
     position.y * scale.y
   );
-  ctx.fillRect(
+  ctx.drawImage(
+    image,
     pos.x - originX,
     pos.y - originY,
     width * scale.x,

@@ -54,9 +54,11 @@ export function createCanvas(): HTMLCanvasElement {
   return canvas;
 }
 
+// @todo: Rethink this, the only thing really being used here is clear, toScreen, and get context.
 export interface EditableCanvas {
   getContext(): CanvasRenderingContext2D;
   toScreen(x: number, y: number): Vector2;
+  toScreenIsometric(x: number, y: number): Vector2;
   drawSprite(
     sprite: ImageBitmap,
     x: number,
@@ -84,6 +86,12 @@ export function editCanvas(
     },
     toScreen(x, y) {
       return new Vector2(x * ppc.x, y * ppc.y);
+    },
+    toScreenIsometric(x, y) {
+      return new Vector2(
+        (ppc.x / 2) * (x - y) + canvas.width / window.devicePixelRatio / 2,
+        (ppc.y / 2) * (x + y)
+      );
     },
     drawSprite(sprite, x, y, scale = 1) {
       context.drawImage(
