@@ -4,7 +4,6 @@
 
 What to work on next?
 
-- Add time module
 - Get runtime running on server
 - Add a "addPlayer" interface to runtime, make server assign random position to each player on join
 - Render each player on each client
