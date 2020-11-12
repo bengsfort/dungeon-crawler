@@ -1,4 +1,5 @@
 import { caf, raf } from "./polyfills";
+import { frameStart, runtimeStart } from "./time";
 
 const NOOP = () => {};
 
@@ -13,6 +14,7 @@ const updateHandlers = new Map<number, (timestamp: number) => void>();
 const postUpdateHandlers = new Map<number, (timestamp: number) => void>();
 
 function update(timestamp = 0): void {
+  frameStart();
   rafId = raf(update);
   const handlers = [...updateHandlers.values(), ...postUpdateHandlers.values()];
   for (let i = 0; i < handlers.length; i++) {
@@ -22,6 +24,7 @@ function update(timestamp = 0): void {
 
 export const start = (setup = NOOP): void => {
   console.log("Starting game loop.");
+  runtimeStart();
   setup();
   update();
 };

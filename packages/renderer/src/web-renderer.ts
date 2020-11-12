@@ -18,6 +18,8 @@ let editableCanvas: EditableCanvas;
 let pixelsPerCoordinate = new Vector2(32, 16);
 let isPaused = false;
 
+let forceDraw = () => {};
+
 export const pause = (): void => {
   isPaused = true;
 };
@@ -48,6 +50,7 @@ const renderLoop: RenderLoop = (): void => {
   for (let i = 0; i < loopDrawables.length; i++) {
     renderDrawable(loopDrawables[i], editableCanvas);
   }
+  forceDraw();
 };
 
 export const create = (): RenderLoop => {
@@ -72,6 +75,13 @@ export const render = <T extends DrawableOpts>(drawable: Drawable<T>): void => {
 export const setCoordsSize = (size: Vector2): void => {
   pixelsPerCoordinate = size;
 };
+
+export const setForceDraw = (fn: () => void): void => {
+  console.log("force draw");
+  forceDraw = fn;
+};
+
+export const getActiveCanvas = (): HTMLCanvasElement => activeCanvas;
 
 export const renderInterface = {
   pause,
