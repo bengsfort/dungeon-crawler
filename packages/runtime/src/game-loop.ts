@@ -13,6 +13,9 @@ const updateHandlers = new Map<number, (timestamp: number) => void>();
 // after entity/controller state has already been updated.
 const postUpdateHandlers = new Map<number, (timestamp: number) => void>();
 
+let useFixedTicks = false;
+let fixedTicksPerSecond = 60;
+
 function update(timestamp = 0): void {
   frameStart();
   rafId = raf(update);
@@ -21,6 +24,11 @@ function update(timestamp = 0): void {
     handlers[i](timestamp);
   }
 }
+
+export const setFixedTickrate = (val: boolean, fps = 60): void => {
+  useFixedTicks = val;
+  fixedTicksPerSecond = fps;
+};
 
 export const start = (setup = NOOP): void => {
   console.log("Starting game loop.");
