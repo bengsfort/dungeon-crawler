@@ -10,7 +10,9 @@
       }
     </style>
     <script>
-      window.ENV_CONFIG = JSON.parse('<%- JSON.stringify(envConfig) %>');
+      window.ENV_CONFIG = {
+        roomId: "<%- roomId %>",
+      };
     </script>
   </head>
   <body>

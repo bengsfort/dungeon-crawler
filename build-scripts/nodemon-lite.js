@@ -61,6 +61,8 @@ if (cluster.isMaster) {
   cluster.setupMaster({
     exec: entry,
   });
-  cluster.fork();
+  cluster.fork({
+    dev_server: "true"
+  });
   watchChanges(entry);
 }

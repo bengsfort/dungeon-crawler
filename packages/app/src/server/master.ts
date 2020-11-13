@@ -9,6 +9,7 @@ const createRoomId = () =>
 export const setupMaster = (app: expressWs.Application): void => {
   console.log("Setting up master worker");
   const workers = new WorkerManager();
+  const rooms: string[] = [];
 
   // @todo: This should also recieve the players username, and the level that should load
   app.post("/room/create", (req, res) => {
@@ -23,10 +24,20 @@ export const setupMaster = (app: expressWs.Application): void => {
     // and will set up a web socket server on the same port with a /{roomId} route.
     const roomId = createRoomId();
     if (workers.createRoomWorker(roomId) !== -1) {
+      rooms.push(roomId);
       res.status(201).redirect(`/room/${roomId}`);
     } else {
       // @todo: better error handling
       res.status(500).send({ error: "Couldn't create room" });
+    }
+  });
+
+  app.get("/room/:roomId", (req, res) => {
+    // if room exists && room is not full, THEN ->
+    if (rooms.includes(req.params.roomId)) {
+      res.render("room", { roomId: req.params.roomId });
+    } else {
+      res.status(404).send("Room does not exist");
     }
   });
 
