@@ -9,6 +9,7 @@ const port = 3000;
 
 const app = Server.start(express(), "/socket");
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/views"));
 
 // @todo: Proper route definitions; dev route definitions for testing worlds directly
 // @todo: Use same model as among us: create a room, start in sandbox, once everyone is ready load game

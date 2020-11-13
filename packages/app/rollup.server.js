@@ -1,3 +1,4 @@
+import assets from "rollup-plugin-copy-assets";
 import builtins from "builtin-modules";
 import commonJS from "rollup-plugin-commonjs";
 import json from "@rollup/plugin-json";
@@ -14,7 +15,15 @@ export default {
   },
   plugins: [
     resolve(),
-    commonJS(),
+    assets({
+      assets: [
+        "src/server/views",
+      ],
+    }),
+    commonJS({
+      dynamicRequireTargets: ["../../node_modules/ejs/*.js"],
+      ignore: ["ejs", "jade"],
+    }),
     typescript({
       tsconfig: "tsconfig.server.json",
     }),

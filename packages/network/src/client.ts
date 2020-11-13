@@ -45,6 +45,8 @@ const onMessage = (event: MessageEvent): void => {
       );
       break;
     case MessageTypes.ConnectionHandshake:
+      // get ENV_CONFIG from window
+      // use it to connect to a room?
       console.log(
         "Received handshake from server.",
         (data as ConnectionHandshakeMessage).accepted
