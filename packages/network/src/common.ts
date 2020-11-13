@@ -9,3 +9,8 @@ export enum WSReadyState {
 export enum WSCloseReasons {
   CLOSE_NORMAL = 1000,
 }
+
+export interface GameEnvSetup {
+  world: string; // name of world
+  roomId: string; // Room ID
+}

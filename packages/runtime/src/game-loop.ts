@@ -3,7 +3,10 @@ import { frameStart, runtimeStart } from "./time";
 
 const NOOP = () => {};
 
-// Internal game loop state
+// @todo: we need to change this into instance-based so we can have multiple
+// instances on the same server. OR we need to rethink our server architecture...
+// (middleman for registration, spin up new "Game" server instance when creating a room)
+
 let rafId = 0;
 let id = 0;
 
@@ -13,12 +16,11 @@ const updateHandlers = new Map<number, (timestamp: number) => void>();
 // after entity/controller state has already been updated.
 const postUpdateHandlers = new Map<number, (timestamp: number) => void>();
 
-let useFixedTicks = false;
-let fixedTicksPerSecond = 60;
+let fixedTicksPerSecond = -1;
 
 function update(timestamp = 0): void {
   frameStart();
-  rafId = raf(update);
+  rafId = raf(update, fixedTicksPerSecond);
   const handlers = [...updateHandlers.values(), ...postUpdateHandlers.values()];
   for (let i = 0; i < handlers.length; i++) {
     handlers[i](timestamp);
@@ -26,8 +28,11 @@ function update(timestamp = 0): void {
 }
 
 export const setFixedTickrate = (val: boolean, fps = 60): void => {
-  useFixedTicks = val;
-  fixedTicksPerSecond = fps;
+  if (val === false) {
+    fixedTicksPerSecond = -1;
+  } else {
+    fixedTicksPerSecond = fps;
+  }
 };
 
 export const start = (setup = NOOP): void => {

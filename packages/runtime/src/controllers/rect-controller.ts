@@ -1,9 +1,9 @@
 import { Drawable, Drawables, RectOpts } from "@dungeon-crawler/renderer";
+import { getRenderer, hasActiveRenderer } from "../runtime";
 
 import { BaseController } from "./controller";
 import { Renderer } from "../interop-interfaces";
 import { Vector2 } from "@dungeon-crawler/core";
-import { getRenderer } from "../runtime";
 
 interface Opts {
   width: number;
@@ -34,6 +34,6 @@ export class RectController extends BaseController {
     const { _drawable, entity } = this;
     _drawable.data.scale = entity.transform.scale;
     _drawable.data.position = entity.transform.position;
-    this._renderer.render(_drawable);
+    if (hasActiveRenderer()) this._renderer.render(_drawable);
   };
 }

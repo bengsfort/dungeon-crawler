@@ -45,6 +45,7 @@
     "@dungeon-crawler/renderer": "^0.1.0",
     "@dungeon-crawler/runtime": "^0.1.0",
     "bufferutil": "^4.0.2",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "stats.js": "^0.17.0",

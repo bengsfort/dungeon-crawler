@@ -7,19 +7,15 @@ type RafItem = {
   callback: RafCallback;
 };
 
-const FRAME_DURATION = 1000 / 144;
 const QUEUE: RafItem[] = [];
 
 let id = 0;
 let last = 0;
 
-export const raf = (cb: RafCallback): number => {
-  if (window && window.requestAnimationFrame)
-    return window.requestAnimationFrame(cb);
-
+const requestFixedTick = (cb: RafCallback, fps = 60): number => {
   if (QUEUE.length === 0) {
     const frame = now();
-    const next = Math.max(0, FRAME_DURATION - (frame - last));
+    const next = Math.max(0, 1000 / fps - (frame - last));
     last = frame + next;
 
     setTimeout(() => {
@@ -39,6 +35,12 @@ export const raf = (cb: RafCallback): number => {
     callback: cb,
   });
   return id;
+};
+
+export const raf = (cb: RafCallback, fps = -1): number => {
+  if (fps < 0 && window && window.requestAnimationFrame)
+    return window.requestAnimationFrame(cb);
+  return requestFixedTick(cb, fps);
 };
 
 export const caf = (id: number): void => {
