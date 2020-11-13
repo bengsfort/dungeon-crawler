@@ -9,9 +9,13 @@
         left: 15px;
       }
     </style>
+    <script>
+      window.ENV_CONFIG = JSON.parse('<%- JSON.stringify(envConfig) %>');
+    </script>
   </head>
   <body>
-    <h1>Hello</h1>
+    <button id="cancel">CANCEL</button>
+    <div id="root"></div>
     <script src="index.js"></script>
   </body>
 </html>

@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 // (try to synchronize 'update' ticks so physics events happen on a fixed timer)
 
 const clients = new Map<string, WebSocket>();
-let instance: expressWs.Instance;
+let instance: expressWs.Instance | null = null;
 
 const onClientClose = (id: string) => (ev: WebSocket.CloseEvent) => {
   console.log("[Networking] Client closed", id, ev.code, ev.reason);
@@ -81,13 +81,14 @@ export const messageAllClients = <T extends NetworkMessageBase>(
   });
 };
 
-export const start = (
-  expressApp: Express,
-  route = "/socket"
-): expressWs.Application => {
-  instance = expressWs(expressApp);
-  instance.app.ws(route, onClientConnected);
+export const start = (expressApp: Express): expressWs.Application => {
+  if (instance === null) instance = expressWs(expressApp);
   return instance.app;
+};
+
+export const setRoute = (route: string): void => {
+  if (instance === null) return;
+  instance.app.ws(route, onClientConnected);
 };
 
 export const stop = (): void => {

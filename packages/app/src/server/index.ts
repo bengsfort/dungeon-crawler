@@ -1,25 +1,25 @@
-import { GameEnvSetup, Server } from "@dungeon-crawler/network";
+import { DIST_DIR, PORT } from "./constants";
 
+import { Server } from "@dungeon-crawler/network";
+import cluster from "cluster";
 import express from "express";
 import { handler } from "./testMessage";
 import path from "path";
+import { setupGameRoom } from "./game-room";
+import { setupMaster } from "./master";
 
-const __dist_dir = path.resolve(process.cwd(), "dist");
-const port = 3000;
-
-const app = Server.start(express(), "/socket");
+const app = Server.start(express());
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "/views"));
 
-// @todo: Proper route definitions; dev route definitions for testing worlds directly
-// @todo: Use same model as among us: create a room, start in sandbox, once everyone is ready load game
-app.get("/", (req, res) => {
-  const envSetup: GameEnvSetup = {
-    roomId: "henlo",
-    world: "sandbox",
-  };
-  res.render("index", { envConfig: envSetup });
-});
+// Notes:
+// This doesn't work in dev mode (since it is already in a child process)
+// Getting an EADDRINUSE error; perhaps express doesn't share like the node server does?
+// `process.env` stuff isnt getting set in dev mode as master is never getting setup
+if (cluster.isMaster) {
+  setupMaster(app);
+} else {
+  setupGameRoom();
+}
 
-app.use("/", express.static(path.join(__dist_dir, "client")));
-app.listen(port, handler(port));
+app.use("/", express.static(path.join(DIST_DIR, "client")));
+app.listen(PORT, handler(PORT));
