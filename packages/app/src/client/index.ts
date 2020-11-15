@@ -1,83 +1,51 @@
-// import "./css/normalize.css";
+// Temporary entrypoint
 
-import * as Client from "@dungeon-crawler/network/dist/client";
+const status = document.getElementById("status") as HTMLDivElement;
+const usernameInput = document.getElementById("username") as HTMLInputElement;
+const roomIdInput = document.getElementById("room-id") as HTMLInputElement;
+const createBtn = document.getElementById("create-btn") as HTMLButtonElement;
+const joinBtn = document.getElementById("join-btn") as HTMLButtonElement;
 
-import { Controls, keyDown } from "./utils/key-down";
-import {
-  GameLoop,
-  Runtime,
-  TiledMap,
-  TiledTileset,
-  Time,
-  World,
-} from "@dungeon-crawler/runtime";
-import { map, tiles } from "./loaders/sandbox";
+const ROOM_ID_LENGTH = 5;
 
-import { WebRenderer } from "@dungeon-crawler/renderer";
+let username = "";
+let roomId = "";
 
-const cancelButton = document.getElementById("cancel") as HTMLButtonElement;
-cancelButton.onclick = () => {
-  GameLoop.stop();
-  // main();
-  // setTimeout(() => GameLoop.stop(), 10 * 1000);
-};
-
-// @todo: lazy load tilemap
-async function getWorld(): Promise<{
-  map: TiledMap;
-  tileset: TiledTileset;
-}> {
-  // const { map, tiles } = (await import("./loaders/sandbox")) as {
-  //   map: TiledHelpers.TiledMap;
-  //   tiles: TiledHelpers.TiledTileset;
-  // };
-  // return map;
-  return Promise.resolve({ map, tileset: tiles });
+function showError(err: string): void {
+  status.classList.remove("hide");
+  status.innerText = err;
 }
 
-let debugCanvas: HTMLCanvasElement;
-let debugContext: CanvasRenderingContext2D;
+usernameInput.addEventListener("change", (ev) => {
+  username = (ev.target as HTMLInputElement).value;
+});
+roomIdInput.addEventListener("change", (ev) => {
+  roomId = (ev.target as HTMLInputElement).value;
+});
 
-const drawFps = () => {
-  debugContext.save();
-  debugContext.textAlign = "left";
-  debugContext.fillStyle = "#ffffff";
-  debugContext.font = "16px monospace";
-  debugContext.fillText(
-    `Current FPS: ${Time.getCurrentFps().toFixed(2)}`,
-    16,
-    48
-  );
-  debugContext.restore();
-};
+joinBtn.addEventListener("click", () => {
+  const validRoomId = roomId.length === ROOM_ID_LENGTH;
+  const validUsername = username.length > 3;
+  let activeError = "";
+  if (!validRoomId)
+    activeError = "Room ID is invalid! (Must be 5 characters)\n";
+  if (!validUsername)
+    activeError += "Username invalid, must be more than 3 characters.";
+  if (activeError !== "") {
+    showError(activeError);
+    return;
+  }
+  // join
+});
 
-function main() {
-  Client.connect(`ws://127.0.0.1:2999/room/${ENV_CONFIG.roomId}`);
-  GameLoop.registerPostUpdateHandler(WebRenderer.create());
-  Runtime.registerRenderer(WebRenderer.renderInterface);
-  Runtime.registerInputManager({
-    forward: () => keyDown(Controls.W),
-    backwards: () => keyDown(Controls.S),
-    left: () => keyDown(Controls.A),
-    right: () => keyDown(Controls.D),
-    // temp
-    space: () => keyDown(Controls.Space),
-    control: () => keyDown(Controls.Control),
-  });
-  // just for temp debugging
-  debugCanvas = WebRenderer.getActiveCanvas();
-  debugContext = debugCanvas.getContext("2d") as CanvasRenderingContext2D;
-
-  // Draws FPS in top right
-  WebRenderer.setForceDraw(drawFps);
-
-  GameLoop.start(() => {
-    void getWorld().then(({ map }) => {
-      const world = new World(map);
-      console.log(world);
-      return;
-    });
-  });
-}
-
-main();
+createBtn.addEventListener("click", () => {
+  const validUsername = username.length > 3;
+  let activeError = "";
+  if (!validUsername)
+    activeError += "Username invalid, must be more than 3 characters.";
+  if (activeError !== "") {
+    showError(activeError);
+    return;
+  }
+  // join
+});

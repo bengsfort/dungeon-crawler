@@ -3,15 +3,54 @@
     <title>Dungeon Crawler</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css" />
     <style>
-      #cancel {
-        position: absolute;
-        top: 15px;
-        left: 15px;
+      .panel {
+        width: 420px;
+        margin: 2em auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1em;
+      }
+      .button-group {
+        margin: 2em 0;
+      }
+      .hide {
+        display: none;
+        visibility: hidden;
+      }
+      #status {
+        padding: 1em;
+        border: 1px solid;
+        margin: 0 0 0.5em;
+        border-radius: 0.275em;
+      }
+      #status.error {
+        background: #fbaba2;
+        border-color: red;
+        color: red;
       }
     </style>
   </head>
   <body>
-    <h1>Hello</h1>
+    <main class="panel">
+     <h1>Dungeon crawler</h1>
+     <div id="status" class="hide"></div>
+     <div class="input-group">
+        <label for="username">Username</label>
+        <input name="username" id="username" type="text" />
+      </div>
+      <div class="input-group">
+        <label for="room-id">Room ID</label>
+        <input name="room-id" id="room-id" type="text" />
+      </div>
+      <div class="button-group">
+        <button name="create" id="create-btn">Create</button>
+        <button name="join" id="join-btn">Join</button>
+      </div>
+    </main>
     <script src="index.js"></script>
   </body>
 </html>
