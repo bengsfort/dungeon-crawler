@@ -12,10 +12,6 @@ const app = Server.start(express());
 app.set("view engine", "ejs");
 app.set("views", path.join(DIST_DIR, "/server/views"));
 
-// Notes:
-// This doesn't work in dev mode (since it is already in a child process)
-// Getting an EADDRINUSE error; perhaps express doesn't share like the node server does?
-// `process.env` stuff isnt getting set in dev mode as master is never getting setup
 if (cluster.isMaster) {
   setupMaster(app);
   app.use("/", express.static(path.join(DIST_DIR, "client")));

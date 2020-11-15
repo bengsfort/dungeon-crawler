@@ -51,8 +51,19 @@ const drawFps = () => {
   debugContext.restore();
 };
 
+// temp
+interface EnvConfigContainer extends Window {
+  ENV_CONFIG: {
+    roomId: string;
+  };
+}
+
 function main() {
-  Client.connect("ws://127.0.0.1:3000/socket");
+  Client.connect(
+    `ws://127.0.0.1:2999/room/${
+      (window as EnvConfigContainer).ENV_CONFIG.roomId
+    }`
+  );
   GameLoop.registerPostUpdateHandler(WebRenderer.create());
   Runtime.registerRenderer(WebRenderer.renderInterface);
   Runtime.registerInputManager({

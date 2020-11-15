@@ -1,4 +1,3 @@
-import { Express } from "express";
 import { WorkerManager } from "./workers";
 import expressWs from "express-ws";
 
