@@ -1,4 +1,5 @@
 // import css from "rollup-plugin-css-porter";
+
 import assets from "rollup-plugin-copy-assets";
 import commonJS from "rollup-plugin-commonjs";
 import html from "rollup-plugin-generate-html-template";
@@ -41,7 +42,7 @@ export default [
     input: "src/client/index.ts",
     output: {
       format: "module",
-      file: "dist/client/index.ts",
+      file: "dist/client/index.js",
       name: "GameEntrypoint",
     },
     plugins: [
