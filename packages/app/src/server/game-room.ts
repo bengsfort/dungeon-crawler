@@ -1,8 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Server } from "@dungeon-crawler/network";
-import { WorkerType } from "./constants";
+import { PORT, WorkerType } from "./constants";
 
-export const setupGameRoom = (): void => {
+import { GameLoop } from "@dungeon-crawler/runtime";
+import { Server } from "@dungeon-crawler/network";
+import expressWs from "express-ws";
+
+const WS_PORT = PORT - 1;
+
+export const setupGameRoom = (app: expressWs.Application): void => {
   if (
     process.env.type === WorkerType.idle ||
     typeof process.env.roomId === "undefined"
@@ -10,6 +14,11 @@ export const setupGameRoom = (): void => {
     console.log(`[GameRoom] Setting up idle worker.`);
     return;
   }
+
   console.log(`[GameRoom] Setting up game room with id: ${process.env.roomId}`);
   Server.setRoute(`/room/${process.env.roomId}`);
+  GameLoop.start();
+  app.listen(WS_PORT, () => {
+    console.log(`[GameRoom] Running at port: ${WS_PORT}`);
+  });
 };

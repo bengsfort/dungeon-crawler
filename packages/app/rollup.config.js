@@ -7,34 +7,49 @@ import json from "@rollup/plugin-json";
 import node from "rollup-plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
 
-export default {
-  input: "src/client/index.ts",
-  output: {
-    // file: "dist/client/bundle.js",
-    format: "module",
-    dir: "dist/client",
-    name: "GameClient",
+export default [
+  {
+    input: "src/client/room.ts",
+    output: {
+      format: "module",
+      dir: "dist/client",
+      name: "GameClient",
+    },
+    plugins: [
+      node(),
+      commonJS(),
+      image(),
+      typescript({
+        tsconfig: "tsconfig.client.json",
+      }),
+      html({
+        template: "./src/client/index.html",
+        target: "./dist/client/index.html",
+      }),
+      json(),
+      assets({
+        assets: [
+          "src/client/tilemaps",
+          "src/client/sprites",
+          "src/client/css",
+          "src/client/favicon.ico",
+        ],
+      }),
+    ],
   },
-  plugins: [
-    node(),
-    commonJS(),
-    image(),
-    // css(),
-    typescript({
-      tsconfig: "tsconfig.client.json",
-    }),
-    html({
-      template: "./src/client/index.html",
-      target: "./dist/client/index.html",
-    }),
-    json(),
-    assets({
-      assets: [
-        "src/client/tilemaps",
-        "src/client/sprites",
-        "src/client/css",
-        "src/client/favicon.ico",
-      ],
-    }),
-  ],
-};
+  {
+    input: "src/client/index.ts",
+    output: {
+      format: "module",
+      file: "dist/client/index.ts",
+      name: "GameEntrypoint",
+    },
+    plugins: [
+      node(),
+      commonJS(),
+      typescript({
+        tsconfig: "tsconfig.client.json",
+      }),
+    ],
+  },
+];

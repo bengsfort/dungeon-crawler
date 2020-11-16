@@ -1,10 +1,18 @@
 // Temporary entrypoint
 
-const status = document.getElementById("status") as HTMLDivElement;
+const statusElement = document.getElementById("status") as HTMLDivElement;
 const usernameInput = document.getElementById("username") as HTMLInputElement;
 const roomIdInput = document.getElementById("room-id") as HTMLInputElement;
 const createBtn = document.getElementById("create-btn") as HTMLButtonElement;
 const joinBtn = document.getElementById("join-btn") as HTMLButtonElement;
+
+interface RoomCreateResponse extends Response {
+  roomId: string;
+}
+
+interface RoomCreateResponseError {
+  error: string;
+}
 
 const ROOM_ID_LENGTH = 5;
 
@@ -12,8 +20,15 @@ let username = "";
 let roomId = "";
 
 function showError(err: string): void {
-  status.classList.remove("hide");
-  status.innerText = err;
+  statusElement.classList.remove("hide");
+  statusElement.classList.add("error");
+  statusElement.innerText = err;
+}
+
+function showStatus(msg: string): void {
+  statusElement.classList.remove("hide");
+  statusElement.classList.add("success");
+  statusElement.innerText = msg;
 }
 
 usernameInput.addEventListener("change", (ev) => {
@@ -35,7 +50,9 @@ joinBtn.addEventListener("click", () => {
     showError(activeError);
     return;
   }
-  // join
+  showStatus(`Connecting to ${roomId}...`);
+  // @todo: apart from redo this make request to see whether the room is joinable or not
+  window.location.pathname = `/room/${roomId}`;
 });
 
 createBtn.addEventListener("click", () => {
@@ -47,5 +64,22 @@ createBtn.addEventListener("click", () => {
     showError(activeError);
     return;
   }
-  // join
+  showStatus("Creating game room...");
+  // @todo: We should create a session for user data maybe?
+  void fetch("/room/create", {
+    method: "POST",
+    body: JSON.stringify({
+      username,
+      world: "sandbox",
+    }),
+  })
+    .then((value) => value.json())
+    .then((value) => {
+      showStatus(`Joining ${(value as RoomCreateResponse).roomId}...`);
+      window.location.pathname = `/room/${
+        (value as RoomCreateResponse).roomId
+      }`;
+      return;
+    })
+    .catch((e) => showError((e as RoomCreateResponseError).error));
 });

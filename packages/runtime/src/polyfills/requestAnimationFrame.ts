@@ -38,7 +38,7 @@ const requestFixedTick = (cb: RafCallback, fps = 60): number => {
 };
 
 export const raf = (cb: RafCallback, fps = -1): number => {
-  if (fps < 0 && window && window.requestAnimationFrame)
+  if (fps < 0 && typeof window !== "undefined" && window.requestAnimationFrame)
     return window.requestAnimationFrame(cb);
   return requestFixedTick(cb, fps);
 };

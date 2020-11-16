@@ -86,6 +86,3 @@ export const getTime = (): Time => ({
   externalTime: lastKnownExternalTime + lastKnownExternalTimeDifference,
   externalTimeDiff: lastKnownExternalTimeDifference,
 });
-
-// @ts-ignore
-window.Timer = getTime;

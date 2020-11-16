@@ -11,7 +11,7 @@ export class WorkerManager {
   private _idleWorkers: number[] = [];
   private _roomWorkers: number[] = [];
 
-  constructor() {
+  init = (): void => {
     console.log(
       `[WorkerManager] Starting working manager to manage workers across ${this._numCPUS} cpus`
     );
@@ -19,7 +19,7 @@ export class WorkerManager {
     for (let i = 0; i < this._numCPUS - 1; i++) {
       this.startIdleWorker();
     }
-  }
+  };
 
   hasAvailableWorker = (): boolean => this._idleWorkers.length > 0;
 
@@ -81,3 +81,5 @@ export class WorkerManager {
   // @todo: implement
   killRoomWorker = (): void => {};
 }
+
+export const workers = new WorkerManager();
