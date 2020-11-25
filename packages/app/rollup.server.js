@@ -16,7 +16,7 @@ export default {
   plugins: [
     resolve(),
     assets({
-      assets: ["src/server/views"],
+      assets: ["./views"],
     }),
     commonJS({
       dynamicRequireTargets: ["../../node_modules/ejs/*.js"],

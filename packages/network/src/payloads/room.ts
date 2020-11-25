@@ -6,6 +6,8 @@ export interface CreateRoomRequest {
 
 export interface CreateRoomResponse {
   roomId: string;
+  session: string;
+  error?: string;
 }
 
 export interface CreateRoomError {
@@ -20,6 +22,8 @@ export interface JoinRoomRequest {
 
 export interface JoinRoomResponse {
   roomId: string;
+  session: string;
+  error?: string;
 }
 
 export interface JoinRoomError {

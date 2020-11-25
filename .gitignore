@@ -48,7 +48,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+prod.env
 
 # epic exceptions
 dist

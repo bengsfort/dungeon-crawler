@@ -1,10 +1,10 @@
-import { WorkerType } from "../constants";
+import { WorkerType } from "./constants";
 import cluster from "cluster";
 import os from "os";
 
 export class WorkerManager {
   // really need to use dotenv files soon....
-  private _numCPUS: number = os.cpus().length / 2;
+  private _numCPUS: number = os.cpus().length;
 
   // @todo: We need to figure out how to better manage creating an idle worker when a room exits
   private _workers = new Map<number, cluster.Worker>();
@@ -48,7 +48,7 @@ export class WorkerManager {
       );
       return;
     }
-    const worker = cluster.fork({ type: WorkerType.idle });
+    const worker = cluster.fork({ WORKER_TYPE: WorkerType.idle });
     this._workers.set(worker.process.pid, worker);
     this._idleWorkers.push(worker.process.pid);
   };
@@ -72,7 +72,10 @@ export class WorkerManager {
     }
 
     idleWorker.kill();
-    const worker = cluster.fork({ type: WorkerType.room, roomId });
+    const worker = cluster.fork({
+      WORKER_TYPE: WorkerType.room,
+      ROOM_ID: roomId,
+    });
     this._workers.set(worker.process.pid, worker);
     this._roomWorkers.push(worker.process.pid);
     return worker.process.pid;

@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  redis:
+    image: redis
+    expose:
+      - 6379
+
+  app:
+    env_file:
+      - packages/app/.env/dev.env
+    build: .
+    volumes:
+      - ./:/var/www/app
+    depends_on:
+      - redis
+    ports:
+      - 3000:3000
+      - 3001:3001
+    links:
+      - redis
+    working_dir: /var/www/app/packages/app
+    command: yarn dev:server

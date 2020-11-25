@@ -1,14 +1,44 @@
 {
   "include": ["./src/server/**/*"],
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src/server",
     "outDir": "dist/server",
-    "baseUrl": "./src",
+    "baseUrl": "src/server",
+
+    "module": "ES2015",
+    "target": "es6",
+    "lib": ["es5", "es6"],
+    "moduleResolution": "node",
+
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "strict": false,
+
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "typeRoots": [
+      "./src/server/types",
+      "./node_modules/@types",
+      "../../node_modules/@types"
+    ],
     "paths": {
-      "@dungeon-crawler/network": ["../network"]
-    },
-    "importHelpers": true
+      "@dungeon-crawler/network": ["../../../network"],
+      "@dungeon-crawler/runtime": ["../../../runtime"]
+    }
   },
-  "references": [{ "path": "../network" }]
+  "references": [
+    { "path": "../network" },
+    { "path": "../runtime" }
+  ],
+  "exclude": ["**/node_modules", "**/dist", "**/*.spec.*"]
 }

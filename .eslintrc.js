@@ -6,5 +6,7 @@ module.exports = {
   },
   rules: {
     "sort-imports": ["warn"],
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
   },
 };
