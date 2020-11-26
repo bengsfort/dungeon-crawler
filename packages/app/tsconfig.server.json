@@ -33,12 +33,14 @@
     ],
     "paths": {
       "@dungeon-crawler/network": ["../../../network"],
-      "@dungeon-crawler/runtime": ["../../../runtime"]
+      "@dungeon-crawler/runtime": ["../../../runtime"],
+      "@dungeon-crawler/world-configs": ["../world-configs"]
     }
   },
   "references": [
     { "path": "../network" },
-    { "path": "../runtime" }
+    { "path": "../runtime" },
+    { "path": "../world-configs" }
   ],
   "exclude": ["**/node_modules", "**/dist", "**/*.spec.*"]
 }

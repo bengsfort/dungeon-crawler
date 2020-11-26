@@ -12,7 +12,7 @@
     "packages/network",
     "packages/renderer",
     "packages/runtime",
-    "packages/module-tests",
+    "packages/world-configs",
     "packages/app"
   ],
   "scripts": {

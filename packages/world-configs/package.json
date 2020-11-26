@@ -1,0 +1,24 @@
+{
+  "name": "@dungeon-crawler/world-configs",
+  "version": "0.1.0",
+  "description": "Package containing tilemaps and configurations for the available worlds.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "author": "Matt Bengston <bengsfort@gmail.com>",
+  "repository": "git@github.com:bengsfort/dungeon-crawler.git",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.5"
+  },
+  "scripts": {
+    "start": "tsc -w -d --preserveWatchOutput",
+    "build": "tsc -b",
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+  },
+  "dependencies": {
+    "@dungeon-crawler/runtime": "^0.1.0"
+  }
+}

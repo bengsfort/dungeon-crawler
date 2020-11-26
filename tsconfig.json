@@ -5,6 +5,7 @@
     { "path": "packages/network" },
     { "path": "packages/renderer" },
     { "path": "packages/runtime" },
+    { "path": "packages/world-configs" },
     { "path": "packages/app/tsconfig.client.json" },
     { "path": "packages/app/tsconfig.server.json" }
   ]

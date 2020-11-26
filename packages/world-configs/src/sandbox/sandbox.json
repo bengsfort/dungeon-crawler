@@ -2049,7 +2049,7 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "tilesets/dev-env.json"
+      "source": "../../../app/src/client/tilesets/dev-env.json"
     }
   ],
   "tilewidth": 32,

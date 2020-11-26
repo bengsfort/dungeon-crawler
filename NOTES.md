@@ -4,7 +4,6 @@
 
 What to work on next?
 
-- Get runtime running on server
 - Add a "addPlayer" interface to runtime, make server assign random position to each player on join
 - Render each player on each client
 - Try passing local movement in, see what happens
@@ -12,15 +11,7 @@ What to work on next?
 - Protobuf compatibility after?
 - Once we have movement working, then continue with rendering?
 
-Flow should go:
-- Go to main page
-  + Create room / join room
-- Redirects to game view with the room ID set in your ENV_CONFIG window var
-- Client networking uses that to connect to the room ID
 - Server networking puts clients for each room ID into their own queues, so each room is self contained
-- Each room has it's own instance of the runtime loop going
-
-use `dotenv`, in `dev` have routes for pre-set world rooms for testing/iterating!
 
 ## Rendering
 

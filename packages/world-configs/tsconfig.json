@@ -1,0 +1,14 @@
+{
+  "include": ["./src/**/*.ts", "./src/**/*.json"],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "@dungeon-crawler/runtime": ["../runtime"]
+    }
+  },
+  "references": [{ "path": "../runtime" }]
+}
