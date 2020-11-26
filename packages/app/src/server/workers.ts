@@ -53,12 +53,12 @@ export class WorkerManager {
     this._idleWorkers.push(worker.process.pid);
   };
 
-  createRoomWorker = (roomId: string): number => {
+  createRoomWorker = (roomId: string): Promise<number> => {
     if (this._idleWorkers.length === 0) {
       console.log(
         "[WorkerManager] Trying to create room but there are no available workers!"
       );
-      return -1;
+      return Promise.reject("No available workers");
     }
     const idlePid = this._idleWorkers.pop() as number;
     const idleWorker = this._workers.get(idlePid);
@@ -68,7 +68,7 @@ export class WorkerManager {
       console.log(
         `[WorkerManager] Tried to get an idle worker that didn't exist: ${idlePid}`
       );
-      return -1;
+      return Promise.reject("Tried starting with an invalid idle worker");
     }
 
     idleWorker.kill();
@@ -76,9 +76,25 @@ export class WorkerManager {
       WORKER_TYPE: WorkerType.room,
       ROOM_ID: roomId,
     });
+
+    worker.on("listening", () => {
+      console.log("Worker", worker.process.pid, "is now listening! :D");
+      worker.removeAllListeners();
+    });
     this._workers.set(worker.process.pid, worker);
     this._roomWorkers.push(worker.process.pid);
-    return worker.process.pid;
+
+    return new Promise<number>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        worker.removeAllListeners();
+        reject("Worker never started");
+      }, 5000);
+      worker.on("listening", () => {
+        clearTimeout(timeout);
+        worker.removeAllListeners();
+        resolve(worker.process.pid);
+      });
+    });
   };
 
   // @todo: implement

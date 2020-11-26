@@ -33,7 +33,7 @@ roomRouter.post("/create", bodyParser.json(), async (req, res, next) => {
     // and will set up a web socket server on the same port with a /{roomId} route.
     const roomId = createRoomId();
     const token = uuidv4();
-    const roomProcess = workers.createRoomWorker(roomId);
+    const roomProcess = await workers.createRoomWorker(roomId);
 
     if (roomProcess !== -1) {
       console.log("Creating room " + roomId + "via player " + req.sessionID);
@@ -51,7 +51,6 @@ roomRouter.post("/create", bodyParser.json(), async (req, res, next) => {
     console.error("There was an error:", e);
     res.status(500).send({ error: "Couldn't create room" });
   }
-  next();
 });
 
 roomRouter.post("/join", bodyParser.json(), async (req, res) => {
