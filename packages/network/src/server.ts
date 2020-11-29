@@ -7,6 +7,7 @@ import {
   NetworkMessageBase,
 } from "./messages";
 
+import { EventEmitter } from "events";
 import { Express } from "express";
 import { WSCloseReasons } from "./common";
 import WebSocket from "ws";
@@ -16,7 +17,11 @@ import { v4 as uuidv4 } from "uuid";
 
 // @todo: think about how client and server pull and integrate events in main loops
 // (try to synchronize 'update' ticks so physics events happen on a fixed timer)
+type EventListener = (() => number) | ((arg0: string) => number);
+const listenerIds = 0;
 
+const eventSystem = new EventEmitter();
+const listeners = new Map<number, Function>();
 const clients = new Map<string, WebSocket>();
 let instance: expressWs.Instance | null = null;
 
@@ -51,6 +56,11 @@ const onClientConnected: expressWs.WebsocketRequestHandler = (ws): void => {
 };
 
 // Public methods
+
+export const onClientJoin = (listener: (clientId: string) => void): void => {
+  eventSystem.addListener("client-joined", listener);
+};
+
 export const messageClient = <T extends NetworkMessageBase>(
   client: string,
   payload: T
