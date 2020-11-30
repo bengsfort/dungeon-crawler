@@ -27,3 +27,8 @@ export const setupChildProcess = (app: expressWs.Application): void => {
     console.log(`[GameRoom] Running at port: ${process.env.WEBSOCKET_PORT}`);
   });
 };
+
+// When creating each game entity, it should add a "state snapshot" component
+// This component is in charge of taking snapshots to send to the client every network tick
+// It should report DELTA'S  of changes, so if someone is AFK it should do nothing and report nothing
+// This will make it easier for the client to manage changes

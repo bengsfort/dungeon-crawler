@@ -59,3 +59,23 @@ function main() {
 }
 
 main();
+
+// NETWORKING:
+// The client should ONLY include a state snapshot component for itself
+// Every network tick when it recieves the game state from the server, it should:
+// - send the user commands to the server for itself
+// - respond with an "acknowledged" command for acknowledging the last sent state
+
+// INPUT MANAGEMENT:
+// Should act similar to now, but more refined
+// functions via declarative USER_COMMANDS
+// ie:
+// +UP
+// +DOWN
+// +LEFT
+// +RIGHT
+// +SPELL1
+// +SPELL2
+// This both makes it easier to send things to the server, but also to add stuff like button mapping
+// Client can do predictive local state changes, but will have a component dedicated to fixing prediction errors via lerping
+// Client should also have a component for lerping between snapshots for every network entity
