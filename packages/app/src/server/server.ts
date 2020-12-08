@@ -5,15 +5,17 @@ import cluster from "cluster";
 import connectRedis from "connect-redis";
 import cookieParser from "cookie-parser";
 import express from "express";
+import expressWs from "express-ws";
 import path from "path";
 import session from "express-session";
 import { setupChildProcess } from "./child-process";
 import { setupPrimary } from "./primary-worker";
 
 export const startServer = (): void => {
-  const app = Server.start(express());
-  const RedisStore = connectRedis(session);
+  const instance = expressWs(express());
+  const app = instance.app;
 
+  const RedisStore = connectRedis(session);
   app.use(cookieParser(process.env.SESSION_SECRET));
   app.use(
     session({

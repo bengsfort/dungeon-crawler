@@ -1,119 +1,106 @@
 // Server interface for handling dungeon crawler connections
 
 import {
-  ClientConnectedMessage,
-  ClientDisconnectedMessage,
-  ConnectionHandshakeMessage,
+  ClientAcknowledgementMessage,
+  MessageTypes,
   NetworkMessageBase,
 } from "./messages";
+import {
+  ClientConnection,
+  OnCloseEventHandler,
+  OnMessageEventHandler,
+} from "./client-connection";
 
-import { EventEmitter } from "events";
-import { Express } from "express";
-import { WSCloseReasons } from "./common";
-import WebSocket from "ws";
+import { NOOP } from "./common";
 import expressWs from "express-ws";
-import { now } from "@dungeon-crawler/core";
-import { v4 as uuidv4 } from "uuid";
 
-// @todo: think about how client and server pull and integrate events in main loops
-// (try to synchronize 'update' ticks so physics events happen on a fixed timer)
-type EventListener = (() => number) | ((arg0: string) => number);
-const listenerIds = 0;
+export type ClientAcknowledgementHandler = (
+  clientId: string,
+  tick: number
+) => void;
+export type ClientJoinedHandler = (clientId: string) => void;
+export type ClientDisconnectedHandler = (clientId: string) => void;
 
-const eventSystem = new EventEmitter();
-const listeners = new Map<number, Function>();
-const clients = new Map<string, WebSocket>();
-let instance: expressWs.Instance | null = null;
+export class WsServer {
+  onClientConnected: ClientJoinedHandler = NOOP;
+  onClientDisconnected: ClientDisconnectedHandler = NOOP;
+  onClientAcknowledgement: ClientAcknowledgementHandler = NOOP;
 
-const onClientClose = (id: string) => (ev: WebSocket.CloseEvent) => {
-  console.log("[Networking] Client closed", id, ev.code, ev.reason);
-  clients.delete(id);
-  messageAllClients(new ClientDisconnectedMessage(id, now()));
-};
+  clients: Map<string, ClientConnection>;
 
-const onClientMessage = (ev: WebSocket.MessageEvent) => {
-  console.log("got message:", ev);
-};
+  private _app: expressWs.Application;
+  private _queue: NetworkMessageBase[];
 
-const onClientError = (ev: WebSocket.ErrorEvent) => {
-  console.error("[Networking] Client errored:", ev.error, ev.message);
-};
-
-const onClientConnected: expressWs.WebsocketRequestHandler = (ws): void => {
-  const id = uuidv4();
-  const currentTime = now();
-  const handshake = new ConnectionHandshakeMessage(id, true, currentTime);
-  console.log("[Networking] New client connected (", id, ").");
-
-  ws.send(handshake.toString());
-  ws.onopen = (ev) => console.log("Client opened?", id, ev);
-  ws.onclose = onClientClose(id);
-  ws.onmessage = onClientMessage;
-  ws.onerror = onClientError;
-
-  clients.set(id, ws);
-  messageAllClients(new ClientConnectedMessage(id, currentTime), [id]);
-};
-
-// Public methods
-
-export const onClientJoin = (listener: (clientId: string) => void): void => {
-  eventSystem.addListener("client-joined", listener);
-};
-
-export const messageClient = <T extends NetworkMessageBase>(
-  client: string,
-  payload: T
-): void => {
-  if (instance === null) {
-    console.error("Tried sending a message but the WS server is down!");
-    return;
+  constructor(app: expressWs.Application, route: string) {
+    this._app = app;
+    this.clients = new Map<string, ClientConnection>();
+    this._queue = [];
+    app.ws(route, this._onClientConnected);
   }
-  if (clients.has(client) === false) {
-    console.error("Tried sending a message to a client that no longer exists!");
-    return;
-  }
-  const ws = clients.get(client);
-  ws?.send(payload.toString());
-};
 
-export const messageAllClients = <T extends NetworkMessageBase>(
-  payload: T,
-  ignore: string[] = []
-): void => {
-  if (instance === null) {
-    console.error("Tried to send a message to a non-operating WS server");
-    return;
-  }
-  clients.forEach((ws, id) => {
-    if (ignore.includes(id)) return;
-    ws.send(payload.toString());
-  });
-};
+  _onClientConnected: expressWs.WebsocketRequestHandler = (ws, req) => {
+    const id: string = req.signedCookies?.GameSessionAuth;
+    const client = new ClientConnection(ws, id);
+    client.onMessage = this._onClientMessage;
+    client.onClose = this._onClientClose;
+    this.clients.set(id, client);
+    this.onClientConnected(id);
+  };
 
-export const start = (expressApp: Express): expressWs.Application => {
-  if (instance === null) instance = expressWs(expressApp);
-  return instance.app;
-};
+  _onClientMessage: OnMessageEventHandler = (id, data) => {
+    switch (data.type) {
+      case MessageTypes.ClientAcknowledgement:
+        console.log(
+          "Got acknowledgement from client:",
+          id,
+          "(tick:",
+          (data as ClientAcknowledgementMessage).tick
+        );
+        this.onClientAcknowledgement(
+          id,
+          (data as ClientAcknowledgementMessage).tick
+        );
+        break;
+      default:
+        console.log("[Networking] Got unidentified message, ignoring.");
+        break;
+    }
+  };
 
-export const setRoute = (route: string): void => {
-  if (instance === null) return;
-  instance.app.ws(route, onClientConnected);
-};
+  _onClientClose: OnCloseEventHandler = (id) => {
+    this.clients.delete(id);
+    this.onClientDisconnected(id);
+  };
 
-export const stop = (): void => {
-  if (instance === null) return;
+  messageClient = <T extends NetworkMessageBase>(
+    clientId: string,
+    payload: T
+  ): void => {
+    if (this._app === null) {
+      console.error("Tried sending a message but the WS server is down!");
+      return;
+    }
+    if (this.clients.has(clientId) === false) {
+      console.error(
+        "Tried sending a message to a client that no longer exists!"
+      );
+      return;
+    }
+    const connection = this.clients.get(clientId);
+    connection?.message(payload);
+  };
 
-  instance
-    .getWss()
-    .clients.forEach((ws) =>
-      ws.close(WSCloseReasons.CLOSE_NORMAL, "CLOSE_NORMAL")
-    );
-};
-
-export const update = (): void => {
-  // @todo: implement
-  // This is here for the case of having physics based messages handled
-  // on a fixed time step that way the input and physics calculations all
-  // feel smooth
-};
+  messageAllClients = <T extends NetworkMessageBase>(
+    payload: T,
+    ignore: string[] = []
+  ): void => {
+    if (this._app === null) {
+      console.error("Tried to send a message to a non-operating WS server");
+      return;
+    }
+    this.clients.forEach((connection, id) => {
+      if (ignore.includes(id)) return;
+      connection.message(payload);
+    });
+  };
+}

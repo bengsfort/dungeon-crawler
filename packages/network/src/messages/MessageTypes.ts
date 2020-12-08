@@ -1,6 +1,8 @@
 export enum MessageTypes {
-  PlayerMove,
   ClientConnected,
   ClientDisconnected,
+  ClientInputCommand,
+  ClientAcknowledgement,
   ConnectionHandshake,
+  ServerStateUpdate,
 }

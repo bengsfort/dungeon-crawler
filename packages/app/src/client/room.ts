@@ -1,12 +1,11 @@
 // import "./css/normalize.css";
 
-import * as Client from "@dungeon-crawler/network/dist/client";
-
 import { Controls, keyDown } from "./utils/key-down";
 import { GameLoop, Runtime, Time, World } from "@dungeon-crawler/runtime";
 
 import { Sandbox } from "@dungeon-crawler/world-configs";
 import { WebRenderer } from "@dungeon-crawler/renderer";
+import { WsClient } from "@dungeon-crawler/network";
 import { devTiles } from "./tilesets";
 
 const cancelButton = document.getElementById("cancel") as HTMLButtonElement;
@@ -33,8 +32,11 @@ const drawFps = () => {
 };
 
 function main() {
-  Client.connect(`ws://127.0.0.1:3001/play/${ENV_CONFIG.roomId}`);
+  const wsClient = new WsClient(
+    `ws://127.0.0.1:3001/play/${ENV_CONFIG.roomId}`
+  );
   GameLoop.registerPostUpdateHandler(WebRenderer.create());
+  Runtime.registerWsClient(wsClient);
   Runtime.registerRenderer(WebRenderer.renderInterface);
   Runtime.registerInputManager({
     forward: () => keyDown(Controls.W),

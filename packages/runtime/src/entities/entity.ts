@@ -1,5 +1,5 @@
 import { Controller } from "../controllers";
-import { Transform } from "../transform";
+import { Transform } from "../components";
 import { Vector2 } from "@dungeon-crawler/core";
 
 let idCounter = 0;
@@ -7,6 +7,9 @@ let idCounter = 0;
 export class Entity {
   public readonly id = ++idCounter;
   public readonly name: string;
+
+  isPlayerControlled = false;
+
   active: boolean;
   transform: Transform;
   private _controllers: Map<number, Controller>;

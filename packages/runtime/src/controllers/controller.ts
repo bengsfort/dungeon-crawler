@@ -39,7 +39,10 @@ export class BaseController implements Controller {
       }
     }
     this.active = active;
+    this.onActive();
   }
+
+  onActive(): void {}
 
   tick = (): void => {
     if (this.entity === null || this.active === false) {

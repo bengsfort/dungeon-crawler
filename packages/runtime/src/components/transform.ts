@@ -1,4 +1,5 @@
 import { Entity } from "../entities";
+import { SerializeablePlayerState } from "../state";
 import { Vector2 } from "@dungeon-crawler/core";
 
 export class Transform {
@@ -65,5 +66,19 @@ export class Transform {
     if (this.children.includes(child)) return;
     this.children.push(child);
     child.parent = this;
+  }
+
+  getStateProperties(): Partial<SerializeablePlayerState> {
+    return {
+      position: this._position,
+      scale: this._scale,
+    };
+  }
+
+  getDiff(prev: SerializeablePlayerState): Partial<SerializeablePlayerState> {
+    const result: Partial<SerializeablePlayerState> = {};
+    if (this._position.equals(prev.position)) result.position = this._position;
+    if (this._scale.equals(prev.scale)) result.scale = this._scale;
+    return result;
   }
 }

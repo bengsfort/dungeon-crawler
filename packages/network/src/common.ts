@@ -14,3 +14,5 @@ export interface GameEnvSetup {
   world: string; // name of world
   roomId: string; // Room ID
 }
+
+export const NOOP = (): void => {};
