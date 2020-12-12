@@ -23,8 +23,8 @@ export const getPlayerStateDiff = (
     result.position = next.position;
   if (prev.scale.equals(next.scale) === false) result.scale = next.scale;
   if (prev.target !== next.target) result.target = next.target;
-  if (prev.hp === next.hp) result.hp = next.hp;
-  if (prev.power === next.power) result.power = next.power;
+  if (prev.hp !== next.hp) result.hp = next.hp;
+  if (prev.power !== next.power) result.power = next.power;
 
   return result;
 };

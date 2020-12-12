@@ -6,14 +6,19 @@ import {
   ConnectionHandshakeMessage,
   MessageTypes,
   NetworkMessageBase,
+  ServerStateUpdateMessage,
 } from "./messages";
-
-import { WSReadyState } from "./common";
+import { NOOP, WSReadyState } from "./common";
 
 // @todo: think about how client and server pull and integrate events in main loops
 // (try to synchronize 'update' ticks so physics events happen on a fixed timer)
+type OnConnectionAcceptedHandler = (msg: ConnectionHandshakeMessage) => void;
+type OnServerStateUpdateHandler = <T>(msg: ServerStateUpdateMessage<T>) => void;
 
 export class WsClient {
+  onConnectionApproved: OnConnectionAcceptedHandler = NOOP;
+  onServerStateUpdate: OnServerStateUpdateHandler = NOOP;
+
   private _connection: WebSocket;
 
   get isConnected(): boolean {
@@ -63,13 +68,12 @@ export class WsClient {
         );
         break;
       case MessageTypes.ConnectionHandshake:
-        console.log(
-          "Received handshake from server.",
-          (data as ConnectionHandshakeMessage).accepted
-            ? "Connection accepted, our ID is: " +
-                (data as ConnectionHandshakeMessage).clientId
-            : "Connection refused."
-        );
+        console.log("Server handshake received.");
+        this.onConnectionApproved(data as ConnectionHandshakeMessage);
+        break;
+      case MessageTypes.ServerStateUpdate:
+        console.log("Recieved server STATE UPDATE");
+        this.onServerStateUpdate(data as ServerStateUpdateMessage<unknown>);
     }
   };
 

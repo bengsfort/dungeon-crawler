@@ -12,6 +12,7 @@ declare global {
     export interface ProcessEnv {
       NODE_ENV: "production" | "development";
       SERVER_PORT: number;
+      SERVER_URL: string;
       WEBSOCKET_PORT: number;
       SESSION_SECRET: string;
       REDIS_URL: string;

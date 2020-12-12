@@ -2,13 +2,13 @@
   "name": "@dungeon-crawler/runtime",
   "version": "0.1.0",
   "description": "Actual runtime for the dungeon crawler game.",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",
   "private": true,
+  "type": "commonjs",
   "devDependencies": {
     "@types/jest": "^26.0.17",
     "jest": "^26.6.3",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "tsc -w -d --preserveWatchOutput",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test": "jest",
     "build": "tsc -b",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   },

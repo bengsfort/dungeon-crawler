@@ -29,7 +29,10 @@ export const getGameStateDiff = (
   // be already excluded from the map.
   for (let i = 0; i < nextEntities.length; i++) {
     const entityId = nextEntities[i] as keyof SerializeableGameState;
-    if (typeof prev.entities[entityId] === "undefined") continue;
+    if (typeof prev.entities[entityId] === "undefined") {
+      result.entities[entityId] = next.entities[entityId];
+      continue;
+    }
     result.entities[entityId] = getPlayerStateDiff(
       prev.entities[entityId],
       next.entities[entityId]

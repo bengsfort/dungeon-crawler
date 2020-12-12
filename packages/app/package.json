@@ -2,15 +2,15 @@
   "name": "@dungeon-crawler/app",
   "version": "0.1.0",
   "description": "Implementation of the dungeon crawler app.",
-  "main": "dist/server/index.js",
-  "types": "dist/server/index.d.ts",
   "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-image": "^2.0.5",
     "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.0.0",
     "@types/connect-redis": "^0.0.15",
     "@types/cookie-parser": "^1.4.2",
     "@types/dotenv": "^8.2.0",
@@ -37,14 +37,13 @@
   },
   "scripts": {
     "dev:client-build": "rollup -c -w",
-    "dev:server-build": "rollup -c rollup.server.js -w",
-    "dev:server": "nodemon ./dist/server/index.js",
-    "dev": "run-p -cln dev:client-build dev:server-build",
-    "types:server": "tsc -b tsconfig.server.test.json -w",
+    "dev:server-build": "tsc -b tsconfig.server.json -w",
+    "dev:server": "nodemon ./dist/server.js",
+    "dev": "run-p -cln dev:server-build dev:client-build",
     "watch": "yarn dev",
     "start": "yarn build && node ./dist/server/index.js",
-    "build": "yarn build:client && yarn build:server",
-    "build:server": "rollup -c rollup.server.js",
+    "build": "yarn build:server && yarn build:client",
+    "build:server": "tsc -b tsconfig.server.json",
     "build:client": "rollup -c",
     "prebuild": "yarn clean",
     "clean": "rimraf {dist,tsconfig.server.tsbuildinfo}"
@@ -57,6 +56,7 @@
     "@dungeon-crawler/world-configs": "^0.1.0",
     "body-parser": "^1.19.0",
     "bufferutil": "^4.0.2",
+    "builtin-modules": "^3.1.0",
     "connect-redis": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
@@ -68,6 +68,6 @@
     "ioredis": "^4.19.2",
     "stats.js": "^0.17.0",
     "utf-8-validate": "^5.0.3",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.2"
   }
 }

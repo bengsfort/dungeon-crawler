@@ -10,45 +10,42 @@ import typescript from "rollup-plugin-typescript2";
 
 export default [
   {
-    input: "src/client/room.ts",
+    input: "src/public/client/room.ts",
     output: {
-      format: "module",
-      dir: "dist/client",
+      format: "iife",
+      dir: "dist/public/client",
       name: "GameClient",
     },
     plugins: [
       node(),
-      commonJS(),
+      commonJS({
+        namedExports: {
+          "@dungeon-crawler/network": ["WsClient"],
+        },
+      }),
       image(),
       typescript({
+        rollupCommonJSResolveHack: true,
         tsconfig: "tsconfig.client.json",
-      }),
-      html({
-        template: "./src/client/index.html",
-        target: "./dist/client/index.html",
       }),
       json(),
       assets({
-        assets: [
-          "src/client/tilemaps",
-          "src/client/sprites",
-          "src/client/css",
-          "src/client/favicon.ico",
-        ],
+        assets: ["../sprites", "../css", "../favicon.ico"],
       }),
     ],
   },
   {
-    input: "src/client/index.ts",
+    input: "src/public/client/index.ts",
     output: {
-      format: "module",
-      file: "dist/client/index.js",
+      format: "iife",
+      file: "dist/public/client/index.js",
       name: "GameEntrypoint",
     },
     plugins: [
       node(),
       commonJS(),
       typescript({
+        rollupCommonJSResolveHack: true,
         tsconfig: "tsconfig.client.json",
       }),
     ],

@@ -6,11 +6,12 @@ import {
   getRoomKey,
   getRoomPlayersKey,
   getRoomPlayersMaxKey,
-} from "../schema";
+} from "./redis-helpers";
 
+import { REDIS_PORT } from "../constants";
 import Redis from "ioredis";
 
-export const client = new Redis(6379, "redis");
+export const client = new Redis(REDIS_PORT, "redis");
 client.on("error", console.error);
 
 const addRoom = async (

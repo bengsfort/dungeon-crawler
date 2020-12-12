@@ -35,6 +35,8 @@ function main() {
   const wsClient = new WsClient(
     `ws://127.0.0.1:3001/play/${ENV_CONFIG.roomId}`
   );
+  // @todo: add client state manager
+  // @todo: after handshake, send class choice + name
   GameLoop.registerPostUpdateHandler(WebRenderer.create());
   Runtime.registerWsClient(wsClient);
   Runtime.registerRenderer(WebRenderer.renderInterface);
@@ -60,7 +62,7 @@ function main() {
   });
 }
 
-main();
+export default main();
 
 // NETWORKING:
 // The client should ONLY include a state snapshot component for itself

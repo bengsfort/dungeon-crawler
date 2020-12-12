@@ -4,6 +4,7 @@ import { SerializeablePlayerState } from "../state";
 import { ServerStateController } from "./server-state-controller";
 import { getActiveStateManager } from "../runtime";
 
+// @todo: ADD TESTS
 export class ServerStateReporterController extends BaseController {
   entity: PlayerCharacter;
 

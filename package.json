@@ -22,6 +22,7 @@
     "clean": "yarn workspaces run clean",
     "lint": "eslint . --ext .js,.ts --max-warnings=0",
     "lint:fix": "yarn lint --fix",
+    "test": "jest",
     "format": "prettier --write \"**/*.{js,json,ts,tsx}\"",
     "format:check": "prettier --list-different \"**/*.{js,json,ts,tsx}\"",
     "pre-commit": "yarn lint-staged"
@@ -31,8 +32,10 @@
     "@types/express": "^4.17.6",
     "eslint": "^7.1.0",
     "husky": "^4.2.5",
+    "jest": "^26.6.3",
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
+    "ts-jest": "^26.4.4",
     "typescript": "^3.9.5"
   }
 }

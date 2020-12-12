@@ -31,14 +31,13 @@ export class WsServer {
   private _app: expressWs.Application;
   private _queue: NetworkMessageBase[];
 
-  constructor(app: expressWs.Application, route: string) {
+  constructor(app: expressWs.Application) {
     this._app = app;
     this.clients = new Map<string, ClientConnection>();
     this._queue = [];
-    app.ws(route, this._onClientConnected);
   }
 
-  _onClientConnected: expressWs.WebsocketRequestHandler = (ws, req) => {
+  clientConnectionHandler: expressWs.WebsocketRequestHandler = (ws, req) => {
     const id: string = req.signedCookies?.GameSessionAuth;
     const client = new ClientConnection(ws, id);
     client.onMessage = this._onClientMessage;

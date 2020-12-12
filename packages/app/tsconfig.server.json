@@ -1,13 +1,13 @@
 {
-  "include": ["./src/server/**/*"],
+  "include": ["./src/**/*", "src/**/*.json"],
   "compilerOptions": {
-    "rootDir": "src/server",
-    "outDir": "dist/server",
-    "baseUrl": "src/server",
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
 
-    "module": "ES2015",
+    "module": "commonjs",
     "target": "es6",
-    "lib": ["es5", "es6"],
+    "lib": ["es5", "es6", "DOM"],
     "moduleResolution": "node",
 
     "composite": true,
@@ -27,13 +27,13 @@
     "emitDecoratorMetadata": true,
 
     "typeRoots": [
-      "./src/server/types",
+      "src/types",
       "./node_modules/@types",
       "../../node_modules/@types"
     ],
     "paths": {
-      "@dungeon-crawler/network": ["../../../network"],
-      "@dungeon-crawler/runtime": ["../../../runtime"],
+      "@dungeon-crawler/network": ["../network"],
+      "@dungeon-crawler/runtime": ["../runtime"],
       "@dungeon-crawler/world-configs": ["../world-configs"]
     }
   },

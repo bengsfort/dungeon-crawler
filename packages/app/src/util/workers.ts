@@ -1,4 +1,4 @@
-import { WorkerType } from "./constants";
+import { WorkerType } from "../constants";
 import cluster from "cluster";
 import os from "os";
 

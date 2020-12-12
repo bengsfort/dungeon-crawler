@@ -4,7 +4,6 @@
   "description": "Package containing tilemaps and configurations for the available worlds.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
   "author": "Matt Bengston <bengsfort@gmail.com>",
   "repository": "git@github.com:bengsfort/dungeon-crawler.git",
   "license": "MIT",

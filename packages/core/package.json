@@ -14,9 +14,7 @@
   },
   "scripts": {
     "start": "tsc -w -d --preserveWatchOutput",
-    "build:module": "tsc --module esnext -b",
-    "build:cjs": "tsc --module commonjs -b",
-    "build": "yarn build:module && yarn build:cjs",
+    "build": "tsc -b",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   }
 }

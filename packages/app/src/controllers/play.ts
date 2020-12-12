@@ -1,10 +1,14 @@
-import { RedisCache } from "../util";
-import { RequestCookies } from "../schema";
-import express from "express";
+import * as RedisCache from "../util/redis-interface";
 
-export const playRouter = express.Router({ caseSensitive: true });
+import { Request, Response } from "express";
 
-playRouter.get("/:roomId", async (req, res) => {
+import { RequestCookies } from "../util/cookies";
+
+/**
+ * Render a successfully joined game room.
+ * @route GET /play/:roomId
+ */
+export const getRoom = async (req: Request, res: Response) => {
   const { roomId } = req.params;
   try {
     const sessionId = (req.signedCookies as RequestCookies).GameSessionAuth;
@@ -26,4 +30,4 @@ playRouter.get("/:roomId", async (req, res) => {
     console.error("oopsie player doesn't belong", e);
     res.status(500).send({ error: e });
   }
-});
+};

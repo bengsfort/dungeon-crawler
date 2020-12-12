@@ -6,6 +6,7 @@ import {
   ClientJoinedHandler,
   WsServer,
 } from "@dungeon-crawler/network";
+import { Entity, PlayerCharacter } from "../entities";
 import {
   PartialSerializeableGameState,
   SerializeableGameState,
@@ -14,7 +15,6 @@ import {
 } from "../state";
 
 import { BaseController } from "./controller";
-import { Entity } from "../entities";
 import { ServerStateUpdateMessage } from "@dungeon-crawler/network/dist/messages";
 import { registerActiveStateManager } from "../runtime";
 
@@ -52,7 +52,9 @@ export class ServerStateController extends BaseController {
     // add handler for acknowledgement messages
   }
 
-  _onClientConnected: ClientJoinedHandler = (clientId) => {};
+  _onClientConnected: ClientJoinedHandler = (clientId) => {
+    new PlayerCharacter(clientId);
+  };
 
   _onClientDisconnected: ClientDisconnectedHandler = (clientId) => {};
 
@@ -100,16 +102,16 @@ export class ServerStateController extends BaseController {
     snapshot: SerializeableGameState
   ): PartialSerializeableGameState {
     const lastTick = this._acknowledgements.get(clientId) || 0;
-    const tickDifference = snapshot.tick - lastTick;
+    const tickDifference = Math.max(0, snapshot.tick - lastTick);
 
     // If it's been more than 30 ticks, send a full update
     if (tickDifference > this._snapshotHistory.length) return snapshot;
-
-    console.log(
-      "Checking with reference:",
-      lastTick,
-      this._snapshotHistory[tickDifference].tick
-    );
+    if (this._snapshotHistory)
+      console.log(
+        "Checking with reference:",
+        lastTick,
+        this._snapshotHistory[tickDifference]?.tick
+      );
     return getGameStateDiff(this._snapshotHistory[tickDifference], snapshot);
   }
 }
