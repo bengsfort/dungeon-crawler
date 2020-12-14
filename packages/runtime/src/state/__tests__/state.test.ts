@@ -1,5 +1,5 @@
-import { SerializeableGameState, getGameStateDiff } from "./game-state";
-import { SerializeablePlayerState, getPlayerStateDiff } from "./player-state";
+import { SerializeableGameState, getGameStateDiff } from "../game-state";
+import { SerializeablePlayerState, getPlayerStateDiff } from "../player-state";
 
 import { Vector2 } from "@dungeon-crawler/core";
 import { v4 as uuidv4 } from "uuid";

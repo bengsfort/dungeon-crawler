@@ -23,6 +23,9 @@
     "lint": "eslint . --ext .js,.ts --max-warnings=0",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
+    "dev": "docker-compose up",
+    "start": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
+    "debug": "docker-compose -f docker-compose.yml -f docker-compose.debug.yml up",
     "format": "prettier --write \"**/*.{js,json,ts,tsx}\"",
     "format:check": "prettier --list-different \"**/*.{js,json,ts,tsx}\"",
     "pre-commit": "yarn lint-staged"

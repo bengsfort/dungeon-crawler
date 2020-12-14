@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  app:
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 9229-9239:9229-9239
+    command: yarn debug:server
