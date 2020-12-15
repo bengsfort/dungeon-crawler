@@ -15,6 +15,7 @@
   "scripts": {
     "start": "tsc -w -d --preserveWatchOutput",
     "build": "tsc -b",
+    "test": "jest",
     "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
   },
   "dependencies": {

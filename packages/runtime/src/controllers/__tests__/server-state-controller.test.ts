@@ -1,0 +1,3 @@
+jest.useFakeTimers();
+
+describe("ServerStateController", () => {});

@@ -41,6 +41,7 @@
     "dev:server": "nodemon ./dist/server.js",
     "debug:server": "node --inspect ./dist/server.js",
     "dev": "run-p -cln dev:server-build dev:client-build",
+    "test": "echo 'skipping'",
     "watch": "yarn dev",
     "start": "yarn build && node ./dist/server.js",
     "build": "yarn build:server && yarn build:client",
