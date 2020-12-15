@@ -7,7 +7,7 @@ export enum WSReadyState {
 
 // @see https://github.com/Luka967/websocket-close-codes
 export enum WSCloseReasons {
-  CLOSE_NORMAL = 1000,
+  CLOSE_NORMAL = "1000",
 }
 
 export interface GameEnvSetup {

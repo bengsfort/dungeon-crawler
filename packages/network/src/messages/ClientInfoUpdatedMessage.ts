@@ -5,7 +5,7 @@ export class ClientInfoUpdatedMessage extends NetworkMessageBase {
   displayName: string;
   playerClass: string;
 
-  constructor(name: string, playerClass: string, localTime: number) {
+  constructor(name: string, playerClass: string, localTime = 0) {
     super(MessageTypes.ClientInfoUpdated, localTime);
     this.displayName = name;
     this.playerClass = playerClass;

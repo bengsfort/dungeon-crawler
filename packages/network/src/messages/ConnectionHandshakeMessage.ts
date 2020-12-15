@@ -5,7 +5,7 @@ export class ConnectionHandshakeMessage extends NetworkMessageBase {
   clientId: string;
   accepted: boolean;
 
-  constructor(id: string, accepted: boolean, localTime: number) {
+  constructor(id: string, accepted: boolean, localTime = 0) {
     super(MessageTypes.ConnectionHandshake, localTime);
     this.clientId = id;
     this.accepted = accepted;

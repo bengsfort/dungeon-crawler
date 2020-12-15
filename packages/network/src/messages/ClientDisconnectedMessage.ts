@@ -5,7 +5,7 @@ import { NetworkMessageBase } from "./NetworkMessage";
 export class ClientDisconnectedMessage extends NetworkMessageBase {
   clientId: string;
 
-  constructor(id: string, localTime: number) {
+  constructor(id: string, localTime = 0) {
     super(MessageTypes.ClientDisconnected, localTime);
     this.clientId = id;
   }

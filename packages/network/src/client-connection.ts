@@ -22,6 +22,10 @@ export class ClientConnection {
     return this._open;
   }
 
+  get MessageQueueLength(): number {
+    return this._queue.length;
+  }
+
   private _ws: WebSocket;
   private _open = false;
   private _queue: string[] = [];
@@ -35,14 +39,10 @@ export class ClientConnection {
     ws.onmessage = this._onMessage;
     ws.onerror = this._onError;
 
-    const handshake = new ConnectionHandshakeMessage(
-      this.id,
-      true,
-      this.connectTime
-    );
-    ws.send(handshake.toString());
-
     this._ws = ws;
+    this.message(
+      new ConnectionHandshakeMessage(this.id, true, this.connectTime)
+    );
   }
 
   _onOpen = (): void => {
@@ -74,7 +74,7 @@ export class ClientConnection {
     );
   };
 
-  message = <T extends NetworkMessageBase>(payload: T): void => {
+  message<T extends NetworkMessageBase>(payload: T): void {
     if (this._open === false) {
       console.log(
         `[Networking] Trying to send a message to unopened client (${this.id})`
@@ -84,5 +84,5 @@ export class ClientConnection {
     }
 
     this._ws.send(payload.toString());
-  };
+  }
 }

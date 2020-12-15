@@ -12,7 +12,12 @@ import {
 } from "./client-connection";
 
 import { NOOP } from "./common";
+import { Request } from "express";
 import expressWs from "express-ws";
+
+interface SignedCookies {
+  GameSessionAuth: string;
+}
 
 export type ClientAcknowledgementHandler = (
   clientId: string,
@@ -27,18 +32,22 @@ export class WsServer {
   onClientAcknowledgement: ClientAcknowledgementHandler = NOOP;
 
   clients: Map<string, ClientConnection>;
+  get QueueLength(): number {
+    return this._queue.length;
+  }
 
-  private _app: expressWs.Application;
   private _queue: NetworkMessageBase[];
 
-  constructor(app: expressWs.Application) {
-    this._app = app;
+  constructor() {
     this.clients = new Map<string, ClientConnection>();
     this._queue = [];
   }
 
-  clientConnectionHandler: expressWs.WebsocketRequestHandler = (ws, req) => {
-    const id: string = req.signedCookies?.GameSessionAuth;
+  clientConnectionHandler: expressWs.WebsocketRequestHandler = (
+    ws,
+    req: Request
+  ) => {
+    const id: string = (req.signedCookies as SignedCookies).GameSessionAuth;
     const client = new ClientConnection(ws, id);
     client.onMessage = this._onClientMessage;
     client.onClose = this._onClientClose;
@@ -75,10 +84,6 @@ export class WsServer {
     clientId: string,
     payload: T
   ): void => {
-    if (this._app === null) {
-      console.error("Tried sending a message but the WS server is down!");
-      return;
-    }
     if (this.clients.has(clientId) === false) {
       console.error(
         "Tried sending a message to a client that no longer exists!"
@@ -93,10 +98,6 @@ export class WsServer {
     payload: T,
     ignore: string[] = []
   ): void => {
-    if (this._app === null) {
-      console.error("Tried to send a message to a non-operating WS server");
-      return;
-    }
     this.clients.forEach((connection, id) => {
       if (ignore.includes(id)) return;
       connection.message(payload);

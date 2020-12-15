@@ -39,8 +39,6 @@ export class ServerStateController extends BaseController {
       entities: {},
     };
 
-    registerActiveStateManager(this);
-
     this._wsServer.onClientAcknowledgement = this._onAcknowledgement;
     this._wsServer.onClientConnected = this._onClientConnected;
     this._wsServer.onClientDisconnected = this._onClientDisconnected;
