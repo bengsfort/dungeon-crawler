@@ -23,7 +23,7 @@ export class WsClient {
 
   get isConnected(): boolean {
     return (
-      this._connection && this._connection.readyState === WSReadyState.Connected
+      this._connection && this._connection.readyState === WSReadyState.Open
     );
   }
 

@@ -1,6 +1,6 @@
 import { ConnectionHandshakeMessage, NetworkMessageBase } from "./messages";
+import { NOOP, WSReadyState } from "./common";
 
-import { NOOP } from "./common";
 import WebSocket from "ws";
 import { now } from "@dungeon-crawler/core";
 import { v4 as uuidv4 } from "uuid";
@@ -39,6 +39,10 @@ export class ClientConnection {
     ws.onmessage = this._onMessage;
     ws.onerror = this._onError;
 
+    if (ws.readyState === WSReadyState.Open) {
+      this._onOpen();
+    }
+
     this._ws = ws;
     this.message(
       new ConnectionHandshakeMessage(this.id, true, this.connectTime)
@@ -46,6 +50,7 @@ export class ClientConnection {
   }
 
   _onOpen = (): void => {
+    if (this._open === true) return;
     this._open = true;
     console.log("[Networking] New client connected (", this.id, ").");
     while (this._queue.length > 0) {

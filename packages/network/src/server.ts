@@ -32,15 +32,9 @@ export class WsServer {
   onClientAcknowledgement: ClientAcknowledgementHandler = NOOP;
 
   clients: Map<string, ClientConnection>;
-  get QueueLength(): number {
-    return this._queue.length;
-  }
-
-  private _queue: NetworkMessageBase[];
 
   constructor() {
     this.clients = new Map<string, ClientConnection>();
-    this._queue = [];
   }
 
   clientConnectionHandler: expressWs.WebsocketRequestHandler = (

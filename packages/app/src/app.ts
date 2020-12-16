@@ -80,7 +80,7 @@ if (cluster.isMaster) {
     console.log("Initializing game server for room", process.env.ROOM_ID);
     app.set("is_idle", false);
 
-    const wsServer = new WsServer(app);
+    const wsServer = new WsServer();
     app.ws(`/play/${process.env.ROOM_ID}`, wsServer.clientConnectionHandler);
     GameLoop.setFixedTickrate(true, 30);
     GameLoop.start(() => {

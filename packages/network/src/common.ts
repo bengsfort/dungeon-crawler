@@ -1,6 +1,6 @@
 export enum WSReadyState {
   Connecting = 0,
-  Connected = 1,
+  Open = 1,
   Closing = 2,
   Closed = 3,
 }
