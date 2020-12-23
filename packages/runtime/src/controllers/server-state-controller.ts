@@ -4,9 +4,9 @@ import {
   ClientAcknowledgementHandler,
   ClientDisconnectedHandler,
   ClientJoinedHandler,
+  ServerStateUpdateMessage,
   WsServer,
 } from "@dungeon-crawler/network";
-import { Entity, PlayerCharacter } from "../entities";
 import {
   PartialSerializeableGameState,
   SerializeableGameState,
@@ -15,10 +15,21 @@ import {
 } from "../state";
 
 import { BaseController } from "./controller";
-import { ServerStateUpdateMessage } from "@dungeon-crawler/network/dist/messages";
-import { registerActiveStateManager } from "../runtime";
+import { Entity } from "../entities";
 
 export class ServerStateController extends BaseController {
+  get CurrentTick(): number {
+    return this._currentSnapshot.tick;
+  }
+
+  get HistoryLength(): number {
+    return this._snapshotHistory.length;
+  }
+
+  get TrackedEntityCount(): number {
+    return this._statefulEntities.size;
+  }
+
   private _wsServer: WsServer;
   private _statefulEntities: Map<string, Entity>;
 
@@ -51,7 +62,8 @@ export class ServerStateController extends BaseController {
   }
 
   _onClientConnected: ClientJoinedHandler = (clientId) => {
-    new PlayerCharacter(clientId);
+    // this._currentSnapshot.entities[clientId] = {};
+    // new PlayerCharacter(clientId);
   };
 
   _onClientDisconnected: ClientDisconnectedHandler = (clientId) => {};
@@ -59,6 +71,10 @@ export class ServerStateController extends BaseController {
   _onAcknowledgement: ClientAcknowledgementHandler = (clientId, tick) => {
     this._acknowledgements.set(clientId, tick);
   };
+
+  public getLastClientAcknowledgement(id: string): number {
+    return this._acknowledgements.get(id) || -1;
+  }
 
   public registerEntity(entity: Entity): void {
     this._statefulEntities.set(entity.id.toString(), entity);

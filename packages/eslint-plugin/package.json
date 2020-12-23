@@ -10,7 +10,8 @@
   "scripts": {
     "build": "echo 'skipping'",
     "test": "echo 'skipping'",
-    "clean": "echo 'skipping'"
+    "clean": "echo 'skipping'",
+    "generate-dep-graph": "echo 'skipping'"
   },
   "peerDependencies": {
     "eslint": ">=7.1.0",

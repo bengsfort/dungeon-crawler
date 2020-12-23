@@ -52,6 +52,9 @@ export const registerActiveStateManager = (
   activeStateController = manager;
 };
 
+export const setServerFlag = (val: boolean): void => {
+  isServer = val;
+};
 export const isServerRuntime = (): boolean => isServer;
 
 // Client

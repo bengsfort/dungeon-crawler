@@ -1,0 +1,10 @@
+{
+    "tsConfig": "./tsconfig.json",
+    "fileExtensions": ["ts", "json"],
+    "fontSize": "10px",
+    "graphVizOptions": {
+        "G": {
+            "rankdir": "LR"
+        }
+    }
+}

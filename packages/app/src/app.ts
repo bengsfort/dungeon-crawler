@@ -83,6 +83,7 @@ if (cluster.isMaster) {
     const wsServer = new WsServer();
     app.ws(`/play/${process.env.ROOM_ID}`, wsServer.clientConnectionHandler);
     GameLoop.setFixedTickrate(true, 30);
+    GameLoop.setIsServer(true);
     GameLoop.start(() => {
       const world = new World(Sandbox.map);
       console.log("World created:", world.name);

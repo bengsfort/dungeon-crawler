@@ -16,6 +16,7 @@
     "start": "tsc -w -d --preserveWatchOutput",
     "test": "jest",
     "build": "tsc -b",
-    "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo}",
+    "generate-dep-graph": "madge --image ../../dependency-graphs/core.svg ./src"
   }
 }

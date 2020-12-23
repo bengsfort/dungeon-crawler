@@ -2,14 +2,12 @@ import {
   ClientAcknowledgementMessage,
   ClientConnectedMessage,
   ClientDisconnectedMessage,
-  ConnectionHandshakeMessage,
 } from "../messages";
-import { Request, request } from "express";
 
+import { Request } from "express";
 import { WSCloseReasons } from "../common";
 import WebSocket from "ws";
 import { WsServer } from "../server";
-import { validate } from "uuid";
 
 jest.mock("ws");
 

@@ -21,7 +21,8 @@
     "start": "tsc -w -d --preserveWatchOutput",
     "test": "jest",
     "build": "tsc -b",
-    "clean": "rimraf {dist,tsconfig.tsbuildinfo}"
+    "clean": "rimraf {dist,tsconfig.tsbuildinfo}",
+    "generate-dep-graph": "madge --image ../../dependency-graphs/runtime.svg ./src"
   },
   "dependencies": {
     "@dungeon-crawler/core": "^0.1.0",

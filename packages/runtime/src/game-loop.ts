@@ -1,6 +1,8 @@
 import { caf, raf } from "./polyfills";
 import { frameStart, runtimeStart } from "./time";
 
+import { setServerFlag } from "./runtime";
+
 const NOOP = () => {};
 
 // @todo: we need to change this into instance-based so we can have multiple
@@ -33,6 +35,10 @@ export const setFixedTickrate = (val: boolean, fps = 60): void => {
   } else {
     fixedTicksPerSecond = fps;
   }
+};
+
+export const setIsServer = (val: boolean): void => {
+  setServerFlag(val);
 };
 
 export const start = (setup = NOOP): void => {

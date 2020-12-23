@@ -19,12 +19,10 @@ export class WsClient {
   onConnectionApproved: OnConnectionAcceptedHandler = NOOP;
   onServerStateUpdate: OnServerStateUpdateHandler = NOOP;
 
-  private _connection: WebSocket;
+  _connection: WebSocket;
 
   get isConnected(): boolean {
-    return (
-      this._connection && this._connection.readyState === WSReadyState.Open
-    );
+    return this._connection?.readyState === WSReadyState.Open;
   }
 
   constructor(host: string) {
@@ -49,7 +47,7 @@ export class WsClient {
   };
 
   _onWsClose = (event: Event): void => {
-    console.log("WebSocket connection closed.", event);
+    console.log("WebSocket connection closed.");
   };
 
   _onMessage = (event: MessageEvent): void => {
@@ -77,19 +75,14 @@ export class WsClient {
     }
   };
 
-  sendMessage = <T>(messageType: MessageTypes, payload?: T): boolean => {
+  sendMessage = <T extends NetworkMessageBase>(payload: T): boolean => {
     if (this.isConnected === true) {
       // @todo: Use ArrayBuffer or TypedArray here?
-      this._connection.send(
-        JSON.stringify({
-          type: messageType,
-          payload,
-        })
-      );
+      this._connection.send(payload.toString());
       return true;
     } else {
       console.error(
-        `Tried to send ${messageType} message to disconnected server!`
+        `Tried to send ${payload.type} message to disconnected server!`
       );
       return false;
     }

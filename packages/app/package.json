@@ -48,7 +48,8 @@
     "build:server": "tsc -b tsconfig.server.json",
     "build:client": "rollup -c",
     "prebuild": "yarn clean",
-    "clean": "rimraf {dist,tsconfig.server.tsbuildinfo}"
+    "clean": "rimraf {dist,tsconfig.server.tsbuildinfo}",
+    "generate-dep-graph": "madge --image ../../dependency-graphs/app.svg ./src"
   },
   "dependencies": {
     "@dungeon-crawler/core": "^0.1.0",

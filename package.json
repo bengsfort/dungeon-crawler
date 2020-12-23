@@ -28,7 +28,8 @@
     "debug": "docker-compose -f docker-compose.yml -f docker-compose.debug.yml up",
     "format": "prettier --write \"**/*.{js,json,ts,tsx}\"",
     "format:check": "prettier --list-different \"**/*.{js,json,ts,tsx}\"",
-    "pre-commit": "yarn lint-staged"
+    "pre-commit": "yarn lint-staged",
+    "gen-dep-graphs": "yarn workspaces run generate-dep-graph"
   },
   "devDependencies": {
     "@dungeon-crawler/eslint-plugin": "*",
