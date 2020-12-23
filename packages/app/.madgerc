@@ -1,5 +1,5 @@
 {
-    "tsConfig": "./tsconfig.json",
+    "tsConfig": "./tsconfig.server.json",
     "fileExtensions": ["ts"],
     "fontSize": "10px",
     "graphVizOptions": {

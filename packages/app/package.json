@@ -49,7 +49,9 @@
     "build:client": "rollup -c",
     "prebuild": "yarn clean",
     "clean": "rimraf {dist,tsconfig.server.tsbuildinfo}",
-    "generate-dep-graph": "madge --image ../../dependency-graphs/app.svg ./src"
+    "generate-dep-graph": "yarn generate-server-deps && yarn generate-client-deps",
+    "generate-server-deps": "madge --image ../../dependency-graphs/app-server.svg ./src/app.ts",
+    "generate-client-deps": "madge --image ../../dependency-graphs/app-client.svg ./src/public/client"
   },
   "dependencies": {
     "@dungeon-crawler/core": "^0.1.0",
