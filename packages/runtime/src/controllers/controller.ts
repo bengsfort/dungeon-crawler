@@ -19,7 +19,7 @@ export class BaseController implements Controller {
   public active = false;
   public entity!: Entity;
 
-  private _updateHandlerId = -1;
+  protected _updateHandlerId = -1;
 
   setEntity(entity: Entity): void {
     this.entity = entity;

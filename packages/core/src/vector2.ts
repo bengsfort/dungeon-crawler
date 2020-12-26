@@ -1,6 +1,11 @@
 let id = 0;
 
-export class Vector2 {
+export interface V2 {
+  x: number;
+  y: number;
+}
+
+export class Vector2 implements V2 {
   // Helpers
   public static readonly Down = new Vector2(0, -1);
   public static readonly Up = new Vector2(0, 1);
@@ -26,6 +31,10 @@ export class Vector2 {
     return new Vector2(v1.x / v2.x, v1.y / v2.y);
   }
 
+  public static Equals(v1: V2, v2: V2): boolean {
+    return v1.x === v2.x && v1.y === v2.y;
+  }
+
   public x = 0;
   public y = 0;
 
@@ -48,7 +57,7 @@ export class Vector2 {
     return new Vector2(this.x, this.y);
   }
 
-  add(other: Vector2): void {
+  add(other: V2): void {
     this.x += other.x;
     this.y += other.y;
   }
@@ -58,7 +67,15 @@ export class Vector2 {
     this.y *= val;
   }
 
-  equals(val: Vector2): boolean {
+  equals(val: V2): boolean {
     return val.x === this.x && val.y === this.y;
+  }
+
+  toLiteral(): V2 {
+    return { x: this.x, y: this.y };
+  }
+
+  toString(): string {
+    return `{ "x": ${this.x}, "y": ${this.y} }`;
   }
 }

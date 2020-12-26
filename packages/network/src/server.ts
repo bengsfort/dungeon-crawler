@@ -53,10 +53,9 @@ export class WsServer {
     switch (data.type) {
       case MessageTypes.ClientAcknowledgement:
         console.log(
-          "Got acknowledgement from client:",
-          id,
-          "(tick:",
-          (data as ClientAcknowledgementMessage).tick
+          `Got acknowledgement from client ${id} for tick ${
+            (data as ClientAcknowledgementMessage).tick
+          }`
         );
         this.onClientAcknowledgement(
           id,

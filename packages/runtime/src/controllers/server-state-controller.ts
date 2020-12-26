@@ -7,17 +7,29 @@ import {
   ServerStateUpdateMessage,
   WsServer,
 } from "@dungeon-crawler/network";
+import { Entity, PlayerCharacter } from "../entities";
 import {
   PartialSerializeableGameState,
   SerializeableGameState,
   SerializeablePlayerState,
   getGameStateDiff,
 } from "../state";
+import {
+  registerPostUpdateHandler,
+  removePostUpdateHandler,
+} from "../game-loop";
 
 import { BaseController } from "./controller";
-import { Entity } from "../entities";
+import { ServerStateReporterController } from "./server-state-reporter-controller";
+
+const NOOP = (): void => {};
+
+export type OnPlayerConnectionHandler = (player: PlayerCharacter) => void;
 
 export class ServerStateController extends BaseController {
+  readonly historyCapacity: number;
+  readonly fullDiffDelta: number;
+
   get CurrentTick(): number {
     return this._currentSnapshot.tick;
   }
@@ -30,21 +42,27 @@ export class ServerStateController extends BaseController {
     return this._statefulEntities.size;
   }
 
+  onNewPlayer: OnPlayerConnectionHandler = NOOP;
+  onPlayerDisconnected: OnPlayerConnectionHandler = NOOP;
+
   private _wsServer: WsServer;
-  private _statefulEntities: Map<string, Entity>;
+  private _statefulEntities: Map<string, ServerStateReporterController>;
 
   private _currentSnapshot: SerializeableGameState;
   private _snapshotHistory: SerializeableGameState[];
 
   private _acknowledgements: Map<string, number>;
 
-  constructor(server: WsServer) {
+  constructor(server: WsServer, historyCapacity = 60, fullDiffDelta = 10) {
     super();
     this._wsServer = server;
 
+    this.historyCapacity = historyCapacity;
+    this.fullDiffDelta = fullDiffDelta;
+
     this._snapshotHistory = [];
     this._acknowledgements = new Map<string, number>();
-    this._statefulEntities = new Map<string, Entity>();
+    this._statefulEntities = new Map<string, ServerStateReporterController>();
     this._currentSnapshot = {
       tick: 0,
       entities: {},
@@ -61,23 +79,49 @@ export class ServerStateController extends BaseController {
     // add handler for acknowledgement messages
   }
 
-  _onClientConnected: ClientJoinedHandler = (clientId) => {
-    // this._currentSnapshot.entities[clientId] = {};
-    // new PlayerCharacter(clientId);
+  // We override this to use the PostUpdate handler, that way we can guarantee that
+  // we are running AFTER all controller updates have completed.
+  setActive(active: boolean): void {
+    if (active !== this.active) {
+      if (active) {
+        this._updateHandlerId = registerPostUpdateHandler(this.tick);
+      } else {
+        removePostUpdateHandler(this._updateHandlerId);
+      }
+    }
+    this.active = active;
+    this.onActive();
+  }
+
+  _onClientConnected: ClientJoinedHandler = (clientId: string) => {
+    const player = new PlayerCharacter(clientId);
+    const stateReporter = new ServerStateReporterController(this);
+    player.addController(stateReporter);
+    this._statefulEntities.set(clientId, stateReporter);
+    this._currentSnapshot.entities[clientId] = stateReporter.getState(true);
+    this.onNewPlayer(player);
   };
 
-  _onClientDisconnected: ClientDisconnectedHandler = (clientId) => {};
+  _onClientDisconnected: ClientDisconnectedHandler = (clientId: string) => {
+    const reporter = this._statefulEntities.get(
+      clientId
+    ) as ServerStateReporterController;
+    this._statefulEntities.delete(clientId);
+    delete this._currentSnapshot.entities[clientId];
+    this.onPlayerDisconnected(reporter.entity);
+  };
 
   _onAcknowledgement: ClientAcknowledgementHandler = (clientId, tick) => {
     this._acknowledgements.set(clientId, tick);
   };
 
   public getLastClientAcknowledgement(id: string): number {
-    return this._acknowledgements.get(id) || -1;
+    const acknowledgement = this._acknowledgements.get(id);
+    return typeof acknowledgement !== "undefined" ? acknowledgement : -1;
   }
 
-  public registerEntity(entity: Entity): void {
-    this._statefulEntities.set(entity.id.toString(), entity);
+  public registerEntity(reporter: ServerStateReporterController): void {
+    this._statefulEntities.set(reporter.entity.id.toString(), reporter);
   }
 
   public reportStateUpdate(
@@ -88,18 +132,20 @@ export class ServerStateController extends BaseController {
   }
 
   public tick = (): void => {
-    const snapshot = Object.freeze(this._currentSnapshot);
+    const snapshot = this._currentSnapshot;
     const localTime = Time.getCurrentTime();
 
     // Iterate through each client diff, and send them a message
     this._wsServer.clients.forEach((client) => {
+      const instance = this._statefulEntities.get(client.id);
+      if (instance) snapshot.entities[client.id] = instance.getState(true);
       const delta = this._getClientStateDiff(client.id, snapshot);
       const message = new ServerStateUpdateMessage(delta, localTime);
       // @todo: check if we should store the messages, then send them all at once after calculating diffs
       client.message(message);
     });
 
-    if (this._snapshotHistory.length === 60) {
+    if (this._snapshotHistory.length === this.historyCapacity) {
       this._snapshotHistory.pop();
     }
     this._snapshotHistory.unshift(snapshot);
@@ -109,23 +155,29 @@ export class ServerStateController extends BaseController {
         ...snapshot.entities,
       },
     };
+    this._currentSnapshot.toString = () =>
+      JSON.stringify(this._currentSnapshot);
   };
 
   _getClientStateDiff(
     clientId: string,
     snapshot: SerializeableGameState
   ): PartialSerializeableGameState {
-    const lastTick = this._acknowledgements.get(clientId) || 0;
-    const tickDifference = Math.max(0, snapshot.tick - lastTick);
+    const lastAcknowledgedTick = this._acknowledgements.get(clientId);
+    if (typeof lastAcknowledgedTick === "undefined") return snapshot;
 
-    // If it's been more than 30 ticks, send a full update
-    if (tickDifference > this._snapshotHistory.length) return snapshot;
-    if (this._snapshotHistory)
-      console.log(
-        "Checking with reference:",
-        lastTick,
-        this._snapshotHistory[tickDifference]?.tick
-      );
-    return getGameStateDiff(this._snapshotHistory[tickDifference], snapshot);
+    const tickDifference = Math.max(0, snapshot.tick - lastAcknowledgedTick);
+    const snapshotIndex = Math.min(
+      Math.max(0, tickDifference - 1),
+      this.HistoryLength
+    );
+
+    if (
+      snapshotIndex >= this._snapshotHistory.length ||
+      tickDifference >= this.fullDiffDelta
+    )
+      return snapshot;
+
+    return getGameStateDiff(this._snapshotHistory[snapshotIndex], snapshot);
   }
 }

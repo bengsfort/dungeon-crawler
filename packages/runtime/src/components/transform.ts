@@ -70,15 +70,17 @@ export class Transform {
 
   getStateProperties(): Partial<SerializeablePlayerState> {
     return {
-      position: this._position,
-      scale: this._scale,
+      position: this._position.toLiteral(),
+      scale: this._scale.toLiteral(),
     };
   }
 
   getDiff(prev: SerializeablePlayerState): Partial<SerializeablePlayerState> {
     const result: Partial<SerializeablePlayerState> = {};
-    if (this._position.equals(prev.position)) result.position = this._position;
-    if (this._scale.equals(prev.scale)) result.scale = this._scale;
+    if (Vector2.Equals(this._position, prev.position))
+      result.position = this._position.toLiteral();
+    if (Vector2.Equals(this._scale, prev.scale))
+      result.scale = this._scale.toLiteral();
     return result;
   }
 }

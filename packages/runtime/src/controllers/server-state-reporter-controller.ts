@@ -1,25 +1,22 @@
+import { SerializeablePlayerState, defaultPlayerState } from "../state";
+
 import { BaseController } from "./controller";
+import { Entity } from "src/entities";
 import { PlayerCharacter } from "../entities/player-character";
-import { SerializeablePlayerState } from "../state";
 import { ServerStateController } from "./server-state-controller";
-import { getActiveStateManager } from "../runtime";
+import { Vector2 } from "@dungeon-crawler/core";
 
 // @todo: ADD TESTS
 export class ServerStateReporterController extends BaseController {
-  entity: PlayerCharacter;
+  entity!: PlayerCharacter;
 
-  _stateMgr: ServerStateController;
-  _lastState: SerializeablePlayerState;
+  private _stateMgr: ServerStateController;
+  private _lastState: SerializeablePlayerState;
 
-  constructor() {
+  constructor(stateManager: ServerStateController) {
     super();
-    this.entity = super.entity as PlayerCharacter;
-    this._stateMgr = getActiveStateManager();
-    this._lastState = this.getState(true);
-  }
-
-  onActive(): void {
-    this._stateMgr.registerEntity(this.entity);
+    this._stateMgr = stateManager;
+    this._lastState = { ...defaultPlayerState };
   }
 
   getState(fullUpdate = false): SerializeablePlayerState {
