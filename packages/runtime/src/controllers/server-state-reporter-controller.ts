@@ -19,6 +19,10 @@ export class ServerStateReporterController extends BaseController {
     this._lastState = { ...defaultPlayerState };
   }
 
+  // Currently this isn't much a reporter, more a bridge.
+  // The server state reporter is grabbing the state before calculating the
+  // diff itself, so currently `getDiff` isn't being used at all. Not sure
+  // that this is how I want it to work, but it works for now
   getState(fullUpdate = false): SerializeablePlayerState {
     const { entity, _lastState } = this;
     if (fullUpdate === true) {
@@ -35,8 +39,8 @@ export class ServerStateReporterController extends BaseController {
   }
 
   tick = (): void => {
-    const state: SerializeablePlayerState = this.getState();
-    this._stateMgr.reportStateUpdate(this.entity.name, state);
-    this._lastState = Object.freeze(state);
+    // const state: SerializeablePlayerState = this.getState();
+    // this._stateMgr.reportStateUpdate(this.entity.name, state);
+    // this._lastState = Object.freeze(state);
   };
 }

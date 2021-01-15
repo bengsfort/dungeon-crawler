@@ -7,7 +7,6 @@ import {
   ServerStateUpdateMessage,
   WsServer,
 } from "@dungeon-crawler/network";
-import { Entity, PlayerCharacter } from "../entities";
 import {
   PartialSerializeableGameState,
   SerializeableGameState,
@@ -20,11 +19,20 @@ import {
 } from "../game-loop";
 
 import { BaseController } from "./controller";
+import { PlayerCharacter } from "../entities";
 import { ServerStateReporterController } from "./server-state-reporter-controller";
 
 const NOOP = (): void => {};
 
+// temp
+const TICKRATE = 15;
+const TIMESTEP = 1000 / TICKRATE;
+
 export type OnPlayerConnectionHandler = (player: PlayerCharacter) => void;
+
+// IMPORTANT TODO: This SHOULD NOT send a new update every tick!
+// We need a tickrate that will be shared between client and server!
+// ie. every 5 ticks send an update
 
 export class ServerStateController extends BaseController {
   readonly historyCapacity: number;
@@ -50,6 +58,8 @@ export class ServerStateController extends BaseController {
 
   private _currentSnapshot: SerializeableGameState;
   private _snapshotHistory: SerializeableGameState[];
+
+  private _lastMessageTimestamp = 0;
 
   private _acknowledgements: Map<string, number>;
 
@@ -120,10 +130,6 @@ export class ServerStateController extends BaseController {
     return typeof acknowledgement !== "undefined" ? acknowledgement : -1;
   }
 
-  public registerEntity(reporter: ServerStateReporterController): void {
-    this._statefulEntities.set(reporter.entity.id.toString(), reporter);
-  }
-
   public reportStateUpdate(
     clientId: string,
     update: SerializeablePlayerState
@@ -135,15 +141,22 @@ export class ServerStateController extends BaseController {
     const snapshot = this._currentSnapshot;
     const localTime = Time.getCurrentTime();
 
-    // Iterate through each client diff, and send them a message
-    this._wsServer.clients.forEach((client) => {
-      const instance = this._statefulEntities.get(client.id);
-      if (instance) snapshot.entities[client.id] = instance.getState(true);
-      const delta = this._getClientStateDiff(client.id, snapshot);
-      const message = new ServerStateUpdateMessage(delta, localTime);
-      // @todo: check if we should store the messages, then send them all at once after calculating diffs
-      client.message(message);
-    });
+    if (localTime - this._lastMessageTimestamp >= TIMESTEP) {
+      // Iterate through each client diff, and send them a message
+      this._wsServer.clients.forEach((client) => {
+        // Update the current state...
+        const instance = this._statefulEntities.get(client.id);
+        if (instance) snapshot.entities[client.id] = instance.getState(true);
+
+        // Then get the delta.
+        const delta = this._getClientStateDiff(client.id, snapshot);
+        const message = new ServerStateUpdateMessage(delta, localTime);
+
+        // @todo: check if we should store the messages, then send them all at once after calculating diffs
+        client.message(message);
+      });
+      this._lastMessageTimestamp = localTime;
+    }
 
     if (this._snapshotHistory.length === this.historyCapacity) {
       this._snapshotHistory.pop();

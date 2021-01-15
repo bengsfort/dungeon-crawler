@@ -12,8 +12,12 @@ import { NOOP, WSReadyState } from "./common";
 
 // @todo: think about how client and server pull and integrate events in main loops
 // (try to synchronize 'update' ticks so physics events happen on a fixed timer)
-type OnConnectionAcceptedHandler = (msg: ConnectionHandshakeMessage) => void;
-type OnServerStateUpdateHandler = <T>(msg: ServerStateUpdateMessage<T>) => void;
+export type OnConnectionAcceptedHandler = (
+  msg: ConnectionHandshakeMessage
+) => void;
+export type OnServerStateUpdateHandler = <T>(
+  msg: ServerStateUpdateMessage<T>
+) => void;
 
 export class WsClient {
   onConnectionApproved: OnConnectionAcceptedHandler = NOOP;
